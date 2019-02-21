@@ -1,0 +1,14 @@
+{
+    "name": "Utf8Json.UnityShims",
+    "references": [
+        "Utf8Json"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

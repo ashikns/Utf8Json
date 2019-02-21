@@ -177,10 +177,15 @@ namespace Utf8Json.UniversalCodeGenerator
 
         // --- 
 
-        public TypeCollector(IEnumerable<string> inputFiles, IEnumerable<string> inputDirs, IEnumerable<string> conditinalSymbols, bool disallowInternal)
+        public TypeCollector(
+            IEnumerable<string> inputFiles, 
+            IEnumerable<string> inputDirs, 
+            IEnumerable<string> conditionalSymbols, 
+            IEnumerable<string> additionalCompilationDirectories,
+            bool disallowInternal)
         {
-            var compilation = RoslynExtensions.GetCompilationFromProject(inputFiles, inputDirs,
-                conditinalSymbols.Concat(new[] { CodegeneratorOnlyPreprocessorSymbol }).ToArray()
+            var compilation = RoslynExtensions.GetCompilationFromProject(
+                inputFiles, inputDirs, additionalCompilationDirectories, conditionalSymbols.Concat(new[] { CodegeneratorOnlyPreprocessorSymbol }).ToArray()
             );
 
             this.typeReferences = new ReferenceSymbols(compilation);

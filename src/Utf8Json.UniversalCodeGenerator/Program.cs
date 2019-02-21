@@ -13,6 +13,7 @@ namespace Utf8Json.UniversalCodeGenerator
     {
         public List<string> InputFiles { get; private set; }
         public List<string> InputDirectories { get; private set; }
+        public List<string> AdditionalCompilationDirectories { get; private set; }
         public string OutputPath { get; private set; }
         public List<string> ConditionalSymbols { get; private set; }
         public string ResolverName { get; private set; }
@@ -26,6 +27,7 @@ namespace Utf8Json.UniversalCodeGenerator
         {
             InputFiles = new List<string>();
             InputDirectories = new List<string>();
+            AdditionalCompilationDirectories = new List<string>();
             ConditionalSymbols = new List<string>();
             AllowInternal = false;
             NamespaceRoot = "Utf8Json";
@@ -35,6 +37,7 @@ namespace Utf8Json.UniversalCodeGenerator
             {
                 { "i|inputFiles=", "[optional]Input path of cs files(',' separated)", x => { InputFiles.AddRange(x.Split(',')); } },
                 { "d|inputDirs=",  "[optional]Input path of dirs(',' separated)", x =>  { InputDirectories.AddRange(x.Split(',')); } },
+                { "a|additionalCompilationDirs=",  "[optional]Additional directories to refer to during compilation(',' separated)", x =>  { AdditionalCompilationDirectories.AddRange(x.Split(',')); } },
                 { "o|output=", "[required]Output file path", x => { OutputPath = x; } },
                 { "f|allowInternal", "[optional, default=false]Allow generate internal(friend)", x => { AllowInternal = true; } },
                 { "c|conditionalsymbol=", "[optional, default=empty]conditional compiler symbol", x => { ConditionalSymbols.AddRange(x.Split(',')); } },
@@ -93,7 +96,7 @@ namespace Utf8Json.UniversalCodeGenerator
             var sw = Stopwatch.StartNew();
             Console.WriteLine("Project Compilation Start:" + string.Join(",", cmdArgs.InputFiles) + " " + string.Join(",", cmdArgs.InputDirectories));
 
-            var collector = new TypeCollector(cmdArgs.InputFiles, cmdArgs.InputDirectories, cmdArgs.ConditionalSymbols, !cmdArgs.AllowInternal);
+            var collector = new TypeCollector(cmdArgs.InputFiles, cmdArgs.InputDirectories, cmdArgs.ConditionalSymbols, cmdArgs.AdditionalCompilationDirectories, !cmdArgs.AllowInternal);
 
             Console.WriteLine("Project Compilation Complete:" + sw.Elapsed.ToString());
             Console.WriteLine();

@@ -12,10 +12,13 @@ namespace Utf8Json.UniversalCodeGenerator
     // Utility and Extension methods for Roslyn
     internal static class RoslynExtensions
     {
-        public static Compilation GetCompilationFromProject(IEnumerable<string> inputFiles, IEnumerable<string> inputDirectories, string[] preprocessorSymbols)
+        public static Compilation GetCompilationFromProject(
+            IEnumerable<string> inputFiles, 
+            IEnumerable<string> inputDirectories, 
+            IEnumerable<string> additionalCompilationDirectories = null,
+            string[] preprocessorSymbols = null)
         {
             var parseOptions = new CSharpParseOptions(LanguageVersion.Default, DocumentationMode.Parse, SourceCodeKind.Regular, preprocessorSymbols ?? new string[0]);
-            var syntaxTrees = new List<SyntaxTree>();
             var references = new List<MetadataReference>();
 
             var referenceDlls = Directory.GetFiles(Path.GetDirectoryName(typeof(object).Assembly.Location), "*.dll");
@@ -23,6 +26,73 @@ namespace Utf8Json.UniversalCodeGenerator
             {
                 references.Add(MetadataReference.CreateFromFile(dllFile));
             }
+
+            foreach (var dir in inputDirectories ?? new string[0])
+            {
+                var dlls = Directory.GetFiles(dir, "*.dll", SearchOption.AllDirectories);
+                foreach (var dll in dlls)
+                {
+                    references.Add(MetadataReference.CreateFromFile(dll));
+                }
+            }
+
+            foreach (var path in inputFiles ?? new string[0])
+            {
+                if (path.EndsWith(".dll", StringComparison.Ordinal))
+                {
+                    references.Add(MetadataReference.CreateFromFile(path));
+                }
+            }
+
+            if (additionalCompilationDirectories != null)
+            {
+                var interimSyntaxTrees = new List<SyntaxTree>();
+
+                foreach (var dir in inputDirectories ?? new string[0])
+                {
+                    var files = Directory.GetFiles(dir, "*.cs", SearchOption.AllDirectories);
+                    foreach (var file in files)
+                    {
+                        var text = File.ReadAllText(file);
+                        interimSyntaxTrees.Add(CSharpSyntaxTree.ParseText(text, parseOptions));
+                    }
+                }
+
+                foreach (var path in inputFiles ?? new string[0])
+                {
+                    if (path.EndsWith(".cs", StringComparison.Ordinal))
+                    {
+                        var text = File.ReadAllText(path);
+                        interimSyntaxTrees.Add(CSharpSyntaxTree.ParseText(text, parseOptions));
+                    }
+                }
+
+                foreach (var dir in additionalCompilationDirectories)
+                {
+                    var files = Directory.GetFiles(dir, "*.cs", SearchOption.AllDirectories);
+                    foreach (var file in files)
+                    {
+                        var text = File.ReadAllText(file);
+                        interimSyntaxTrees.Add(CSharpSyntaxTree.ParseText(text, parseOptions));
+                    }
+
+                    var dlls = Directory.GetFiles(dir, "*.dll", SearchOption.AllDirectories);
+                    foreach (var dll in dlls)
+                    {
+                        references.Add(MetadataReference.CreateFromFile(dll));
+                    }
+                }
+
+                CSharpCompilation intermediateCompilation = CSharpCompilation.Create(
+                    "Assembly-CSharp",
+                    syntaxTrees: interimSyntaxTrees,
+                    references: references
+                );
+
+                references.Add(intermediateCompilation.ToMetadataReference());
+            }
+
+            var syntaxTrees = new List<SyntaxTree>();
 
             foreach (var dir in inputDirectories ?? new string[0])
             {
@@ -40,10 +110,6 @@ namespace Utf8Json.UniversalCodeGenerator
                 {
                     var text = File.ReadAllText(path);
                     syntaxTrees.Add(CSharpSyntaxTree.ParseText(text, parseOptions));
-                }
-                else if (path.EndsWith(".dll", StringComparison.Ordinal))
-                {
-                    references.Add(MetadataReference.CreateFromFile(path));
                 }
             }
 

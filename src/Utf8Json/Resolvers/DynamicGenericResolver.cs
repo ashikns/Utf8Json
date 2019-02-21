@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using Utf8Json.Resolvers.Internal;
 using System.Collections.ObjectModel;
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 using System.Threading.Tasks;
 #endif
 
@@ -61,7 +61,7 @@ namespace Utf8Json.Resolvers.Internal
             {typeof(SortedList<,>), typeof(SortedListFormatter<,>)},
             {typeof(ILookup<,>), typeof(InterfaceLookupFormatter<,>)},
             {typeof(IGrouping<,>), typeof(InterfaceGroupingFormatter<,>)},
-            #if NETSTANDARD
+            #if NETSTANDARD || NET_STANDARD_2_0
             {typeof(ObservableCollection<>), typeof(ObservableCollectionFormatter<>)},
             {typeof(ReadOnlyObservableCollection<>),(typeof(ReadOnlyObservableCollectionFormatter<>))},
             {typeof(IReadOnlyList<>), typeof(InterfaceReadOnlyListFormatter<>)},
@@ -128,7 +128,7 @@ namespace Utf8Json.Resolvers.Internal
                     return CreateInstance(typeof(NullableFormatter<>), new[] { nullableElementType });
                 }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 
                 // ValueTask
                 else if (genericType == typeof(ValueTask<>))

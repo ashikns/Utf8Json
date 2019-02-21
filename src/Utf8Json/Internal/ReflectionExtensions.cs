@@ -72,7 +72,7 @@ namespace Utf8Json.Internal
             }
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 
         public static bool IsConstructedGenericType(this System.Reflection.TypeInfo type)
         {

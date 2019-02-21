@@ -706,7 +706,7 @@ namespace Utf8Json.Formatters
 
     public sealed class TimeSpanFormatter : IJsonFormatter<TimeSpan>
     {
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         readonly string formatString;
 
         public TimeSpanFormatter()
@@ -722,7 +722,7 @@ namespace Utf8Json.Formatters
 
         public void Serialize(ref JsonWriter writer, TimeSpan value, IJsonFormatterResolver formatterResolver)
         {
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
             writer.WriteString(value.ToString(formatString));
 #else
             writer.WriteString(value.ToString());
@@ -756,7 +756,7 @@ namespace Utf8Json.Formatters
             this.innerFormatter = new TimeSpanFormatter();
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         public NullableTimeSpanFormatter(string formatString)
         {
             this.innerFormatter = new TimeSpanFormatter(formatString);

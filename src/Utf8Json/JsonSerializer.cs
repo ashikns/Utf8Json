@@ -103,7 +103,7 @@ namespace Utf8Json
             stream.Write(buffer.Array, buffer.Offset, buffer.Count);
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 
         /// <summary>
         /// Serialize to stream(write async).
@@ -235,7 +235,7 @@ namespace Utf8Json
         {
             if (resolver == null) resolver = DefaultResolver;
 
-#if NETSTANDARD && !NET45
+#if (NETSTANDARD || NET_STANDARD_2_0) && !NET45
             var ms = stream as MemoryStream;
             if (ms != null)
             {
@@ -270,7 +270,7 @@ namespace Utf8Json
             }
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 
         public static System.Threading.Tasks.Task<T> DeserializeAsync<T>(Stream stream)
         {

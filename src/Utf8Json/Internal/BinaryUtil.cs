@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 using System.Runtime.CompilerServices;
 #endif
 
@@ -12,7 +12,7 @@ namespace Utf8Json.Internal
     {
         const int ArrayMaxSize = 0x7FFFFFC7; // https://msdn.microsoft.com/en-us/library/system.array
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static void EnsureCapacity(ref byte[] bytes, int offset, int appendLength)
@@ -61,7 +61,7 @@ namespace Utf8Json.Internal
         }
 
         // Buffer.BlockCopy version of Array.Resize
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static void FastResize(ref byte[] array, int newSize)
@@ -83,11 +83,11 @@ namespace Utf8Json.Internal
             }
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public static
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
             unsafe
 #endif
             byte[] FastCloneWithResize(byte[] src, int newSize)
@@ -99,7 +99,7 @@ namespace Utf8Json.Internal
 
             byte[] dst = new byte[newSize];
 
-#if NETSTANDARD && !NET45
+#if (NETSTANDARD || NET_STANDARD_2_0) && !NET45
             fixed (byte* pSrc = &src[0])
             fixed (byte* pDst = &dst[0])
             {

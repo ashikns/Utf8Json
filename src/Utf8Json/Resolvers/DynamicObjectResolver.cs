@@ -472,7 +472,7 @@ namespace Utf8Json.Resolvers.Internal
 
     internal static class DynamicObjectTypeBuilder
     {
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         static readonly Regex SubtractFullNameRegex = new Regex(@", Version=\d+.\d+.\d+.\d+, Culture=\w+, PublicKeyToken=\w+", RegexOptions.Compiled);
 #else
         static readonly Regex SubtractFullNameRegex = new Regex(@", Version=\d+.\d+.\d+.\d+, Culture=\w+, PublicKeyToken=\w+");
@@ -1010,7 +1010,7 @@ namespace Utf8Json.Resolvers.Internal
                 emitStringByteKeys();
                 il.EmitLdc_I4(index);
                 il.Emit(OpCodes.Ldelem_Ref);
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
                 // same as in constructor
                 byte[] rawField;
                 if (excludeNull || hasShouldSerialize)
@@ -1484,7 +1484,7 @@ namespace Utf8Json.Resolvers.Internal
             public static readonly ConstructorInfo ObjectCtor = typeof(object).GetTypeInfo().DeclaredConstructors.First(x => x.GetParameters().Length == 0);
 
             public static readonly MethodInfo GetFormatterWithVerify = typeof(JsonFormatterResolverExtensions).GetRuntimeMethod("GetFormatterWithVerify", new[] { typeof(IJsonFormatterResolver) });
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
             public static readonly MethodInfo UnsafeMemory_MemoryCopy = ExpressionUtility.GetMethodInfo((Utf8Json.JsonWriter writer, byte[] src) => UnsafeMemory.MemoryCopy(ref writer, src));
 #endif
             public static readonly ConstructorInfo InvalidOperationExceptionConstructor = typeof(System.InvalidOperationException).GetTypeInfo().DeclaredConstructors.First(x => { var p = x.GetParameters(); return p.Length == 1 && p[0].ParameterType == typeof(string); });

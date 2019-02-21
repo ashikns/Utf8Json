@@ -181,7 +181,7 @@ namespace Utf8Json.Internal
 
         static void VolatileWrite(ref Entry location, Entry value)
         {
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
             System.Threading.Volatile.Write(ref location, value);
 #elif UNITY_METRO || UNITY_WSA
             System.Threading.Volatile.Write(ref location, value);
@@ -193,7 +193,7 @@ namespace Utf8Json.Internal
 
         static void VolatileWrite(ref Entry[] location, Entry[] value)
         {
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
             System.Threading.Volatile.Write(ref location, value);
 #elif UNITY_METRO || UNITY_WSA
             System.Threading.Volatile.Write(ref location, value);

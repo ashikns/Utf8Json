@@ -123,7 +123,7 @@ namespace Utf8Json.Resolvers
                 { typeof(ArraySegment<byte>), ByteArraySegmentFormatter.Default },
                 { typeof(ArraySegment<byte>?),new StaticNullableFormatter<ArraySegment<byte>>(ByteArraySegmentFormatter.Default) },
 
-    #if NETSTANDARD
+    #if NETSTANDARD || NET_STANDARD_2_0
                 {typeof(System.Numerics.BigInteger), BigIntegerFormatter.Default},
                 {typeof(System.Numerics.BigInteger?), new StaticNullableFormatter<System.Numerics.BigInteger>(BigIntegerFormatter.Default)},
                 {typeof(System.Numerics.Complex), ComplexFormatter.Default},

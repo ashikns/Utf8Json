@@ -160,7 +160,7 @@ namespace Utf8Json.Internal
             throw new ArgumentException("Invalid Guid Pattern.");
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         static byte Parse(byte[] bytes, int highOffset)
@@ -168,7 +168,7 @@ namespace Utf8Json.Internal
             return unchecked((byte)(SwitchParse(bytes[highOffset]) * 16 + SwitchParse(bytes[highOffset + 1])));
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         static byte SwitchParse(byte b)

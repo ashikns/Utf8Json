@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 using System.Collections.Concurrent;
 #endif
 
@@ -236,7 +236,7 @@ namespace Utf8Json.Formatters
         }
     }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 
     public sealed class ReadOnlyDictionaryFormatter<TKey, TValue> : DictionaryFormatterBase<TKey, TValue, Dictionary<TKey, TValue>, ReadOnlyDictionary<TKey, TValue>>
     {

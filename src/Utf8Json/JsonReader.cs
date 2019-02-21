@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Utf8Json.Internal;
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 using System.Runtime.CompilerServices;
 #endif
 
@@ -250,7 +250,7 @@ namespace Utf8Json
             }
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         public void SkipWhiteSpace()
@@ -691,7 +691,7 @@ namespace Utf8Json
             }
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         static int GetCodePoint(char a, char b, char c, char d)
@@ -699,7 +699,7 @@ namespace Utf8Json
             return (((((ToNumber(a) * 16) + ToNumber(b)) * 16) + ToNumber(c)) * 16) + ToNumber(d);
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         static int ToNumber(char x)
@@ -970,7 +970,7 @@ namespace Utf8Json
             ReadNextCore(token);
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #endif
         void ReadNextCore(JsonToken token)

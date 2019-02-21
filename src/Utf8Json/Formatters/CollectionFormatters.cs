@@ -6,7 +6,7 @@ using System.Linq;
 using Utf8Json.Formatters.Internal;
 using Utf8Json.Internal;
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 using System.Collections.Concurrent;
 #endif
 
@@ -484,7 +484,7 @@ namespace Utf8Json.Formatters
                 {
                     var keyString = reader.ReadPropertyNameSegmentRaw();
                     int key;
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
                     CollectionFormatterHelper.groupingAutomata.TryGetValue(keyString, out key);
 #else
                     CollectionFormatterHelper.groupingAutomata.TryGetValueSafe(keyString, out key);
@@ -812,7 +812,7 @@ namespace Utf8Json.Formatters
     }
 
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 
     public sealed class ObservableCollectionFormatter<T> : CollectionFormatterBase<T, ObservableCollection<T>>
     {

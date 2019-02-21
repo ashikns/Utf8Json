@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD
+﻿#if NETSTANDARD || NET_STANDARD_2_0
 
 using System;
 

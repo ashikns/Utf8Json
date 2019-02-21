@@ -6,9 +6,9 @@ namespace Utf8Json.Internal
 {
     public static class ByteArrayComparer
     {
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
 
         static readonly bool Is32Bit = (IntPtr.Size == 4);
 
@@ -27,7 +27,7 @@ namespace Utf8Json.Internal
 
 #endif
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         public static unsafe bool Equals(byte[] xs, int xsOffset, int xsCount, byte[] ys)
@@ -35,7 +35,7 @@ namespace Utf8Json.Internal
             return Equals(xs, xsOffset, xsCount, ys, 0, ys.Length);
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         public static unsafe bool Equals(byte[] xs, int xsOffset, int xsCount, byte[] ys, int ysOffset, int ysCount)
@@ -98,7 +98,7 @@ namespace Utf8Json.Internal
         }
 
 #else
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         public static bool Equals(byte[] xs, int xsOffset, int xsCount, byte[] ys)
@@ -116,7 +116,7 @@ namespace Utf8Json.Internal
             return true;
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET_STANDARD_2_0
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
 #endif
         public static bool Equals(byte[] xs, int xsOffset, int xsCount, byte[] ys, int ysOffset, int ysCount)

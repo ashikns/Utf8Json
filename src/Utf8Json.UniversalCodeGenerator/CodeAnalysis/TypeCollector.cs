@@ -389,6 +389,8 @@ namespace Utf8Json.UniversalCodeGenerator
             foreach (var item in type.GetAllMembers().OfType<IPropertySymbol>().Where(x => !x.IsOverride))
             {
                 if (item.GetAttributes().FindAttributeShortName(typeReferences.IgnoreDataMemberAttribute) != null) continue;
+                if (item.IsIndexer) continue;
+
                 var dm = item.GetAttributes().FindAttributeShortName(typeReferences.DataMemberAttribute);
 
                 var name = (dm.GetSingleNamedArgumentValueFromSyntaxTree("Name") as string) ?? item.Name;

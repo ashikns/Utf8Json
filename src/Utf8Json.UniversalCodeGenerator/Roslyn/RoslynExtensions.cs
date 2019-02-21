@@ -16,12 +16,13 @@ namespace Utf8Json.UniversalCodeGenerator
         {
             var parseOptions = new CSharpParseOptions(LanguageVersion.Default, DocumentationMode.Parse, SourceCodeKind.Regular, preprocessorSymbols ?? new string[0]);
             var syntaxTrees = new List<SyntaxTree>();
-            var references = new List<MetadataReference>
+            var references = new List<MetadataReference>();
+
+            var referenceDlls = Directory.GetFiles(Path.GetDirectoryName(typeof(object).Assembly.Location), "*.dll");
+            foreach (var dllFile in referenceDlls)
             {
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(System.Runtime.Serialization.DataMemberAttribute).Assembly.Location),
-            };
+                references.Add(MetadataReference.CreateFromFile(dllFile));
+            }
 
             foreach (var dir in inputDirectories ?? new string[0])
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET_4_6
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
@@ -157,3 +158,4 @@ namespace Utf8Json.Internal.Emit
         }
     }
 }
+#endif

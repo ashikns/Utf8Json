@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET_4_6
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
@@ -1604,3 +1605,4 @@ namespace Utf8Json.Resolvers.Internal
         }
     }
 }
+#endif

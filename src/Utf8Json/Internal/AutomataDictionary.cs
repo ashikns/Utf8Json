@@ -5,7 +5,9 @@ using System.Text;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Reflection;
+#if NET_4_6
 using Utf8Json.Internal.Emit;
+#endif
 
 namespace Utf8Json.Internal
 {
@@ -184,12 +186,13 @@ namespace Utf8Json.Internal
             }
         }
 
+#if NET_4_6
         // IL Emit
-
         public void EmitMatch(ILGenerator il, LocalBuilder p, LocalBuilder rest, LocalBuilder key, Action<KeyValuePair<string, int>> onFound, Action onNotFound)
         {
             root.EmitSearchNext(il, p, rest, key, onFound, onNotFound);
         }
+#endif
 
         class AutomataNode : IComparable<AutomataNode>
         {
@@ -344,6 +347,7 @@ namespace Utf8Json.Internal
                 }
             }
 
+#if NET_4_6
             // SearchNext(ref byte* p, ref int rest, ref ulong key)
             public void EmitSearchNext(ILGenerator il, LocalBuilder p, LocalBuilder rest, LocalBuilder key, Action<KeyValuePair<string, int>> onFound, Action onNotFound)
             {
@@ -459,6 +463,7 @@ namespace Utf8Json.Internal
                     EmitSearchNextCore(il, p, rest, key, onFound, onNotFound, r, r.Length);
                 }
             }
+#endif
         }
     }
 

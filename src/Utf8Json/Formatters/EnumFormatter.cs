@@ -14,7 +14,7 @@ namespace Utf8Json.Formatters
         {
             var underlyingType = Enum.GetUnderlyingType(type);
 
-#if NETSTANDARD || NET_STANDARD_2_0
+#if NETSTANDARD || NET_4_6
             isBoxed = false;
             var dynamicMethod = new DynamicMethod("EnumSerializeByUnderlyingValue", null, new[] { typeof(JsonWriter).MakeByRefType(), type, typeof(IJsonFormatterResolver) }, type.Module, true);
             var il = dynamicMethod.GetILGenerator();
@@ -71,7 +71,7 @@ namespace Utf8Json.Formatters
         {
             var underlyingType = Enum.GetUnderlyingType(type);
 
-#if NETSTANDARD || NET_STANDARD_2_0
+#if NETSTANDARD || NET_4_6
             isBoxed = false;
             var dynamicMethod = new DynamicMethod("EnumDeserializeByUnderlyingValue", type, new[] { typeof(JsonReader).MakeByRefType(), typeof(IJsonFormatterResolver) }, type.Module, true);
             var il = dynamicMethod.GetILGenerator();

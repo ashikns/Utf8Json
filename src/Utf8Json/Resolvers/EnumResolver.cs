@@ -1,5 +1,4 @@
 ﻿using System;
-using Utf8Json.Internal.Emit;
 using Utf8Json.Internal;
 using System.Reflection;
 using System.Collections.Generic;

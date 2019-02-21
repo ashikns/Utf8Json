@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using Utf8Json.Internal.Emit;
 
 namespace Utf8Json.Resolvers
 {
@@ -67,6 +66,7 @@ namespace Utf8Json.Resolvers
             JsonSerializer.SetDefaultResolver(CompositeResolver.Instance);
         }
 
+#if NET_4_6
         public static IJsonFormatterResolver Create(params IJsonFormatter[] formatters)
         {
             return Create(formatters, new IJsonFormatterResolver[0]);
@@ -79,8 +79,9 @@ namespace Utf8Json.Resolvers
 
         public static IJsonFormatterResolver Create(IJsonFormatter[] formatters, IJsonFormatterResolver[] resolvers)
         {
-            return DynamicCompositeResolver.Create(formatters, resolvers);
+            return Utf8Json.Internal.Emit.DynamicCompositeResolver.Create(formatters, resolvers);
         }
+#endif
 
         public IJsonFormatter<T> GetFormatter<T>()
         {
@@ -121,6 +122,7 @@ namespace Utf8Json.Resolvers
         }
     }
 
+#if NET_4_6
     public abstract class DynamicCompositeResolver : IJsonFormatterResolver
     {
         const string ModuleName = "Utf8Json.Resolvers.DynamicCompositeResolver";
@@ -225,4 +227,5 @@ namespace Utf8Json.Resolvers
 
         public abstract IJsonFormatter<T> GetFormatter<T>();
     }
+#endif
 }

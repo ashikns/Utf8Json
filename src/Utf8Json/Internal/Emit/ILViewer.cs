@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET_4_6
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -268,3 +269,4 @@ namespace Utf8Json.Internal
 
 #endif
 }
+#endif

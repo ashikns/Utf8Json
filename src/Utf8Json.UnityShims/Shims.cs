@@ -1,4 +1,4 @@
-﻿
+﻿#if DISABLED
 using System.Runtime.Serialization;
 using Utf8Json;
 
@@ -187,3 +187,4 @@ namespace UnityEngine
         }
     }
 }
+#endif

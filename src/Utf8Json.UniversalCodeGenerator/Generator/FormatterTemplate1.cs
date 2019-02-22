@@ -263,8 +263,18 @@ namespace Utf8Json.CodeGenerator.Generator
             this.Write("__b__ = false;\r\n");
             
             #line 80 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\FormatterTemplate.tt"
- } 
-            
+ }
+
+ var extensionDataMember = objInfo.Members.FirstOrDefault(m => m.IsExtensionData);
+ if (extensionDataMember != null)
+ {
+     var dictType = extensionDataMember.ShortTypeName.Substring(extensionDataMember.ShortTypeName.IndexOf('<'));
+
+     this.Write($@"
+            var __additionalDataDict__ = new System.Collections.Generic.Dictionary{dictType}();
+    ");
+}
+
             #line default
             #line hidden
             this.Write(@"
@@ -273,12 +283,7 @@ namespace Utf8Json.CodeGenerator.Generator
             while (!reader.ReadIsEndObjectWithSkipValueSeparator(ref ____count))
             {
                 var stringKey = reader.ReadPropertyNameSegmentRaw();
-                int key;
-                if (!____keyMapping.TryGetValueSafe(stringKey, out key))
-                {
-                    reader.ReadNextBlock();
-                    goto NEXT_LOOP;
-                }
+                ____keyMapping.TryGetValueSafe(stringKey, out var key);
 
                 switch (key)
                 {
@@ -324,10 +329,36 @@ namespace Utf8Json.CodeGenerator.Generator
             
             #line default
             #line hidden
-            this.Write("                    default:\r\n                        reader.ReadNextBlock();\r\n  " +
-                    "                      break;\r\n                }\r\n\r\n                NEXT_LOOP:\r\n " +
-                    "               continue;\r\n            }\r\n\r\n            var ____result = new ");
-            
+
+if (extensionDataMember == null)
+{
+             this.Write(@"
+                    default:
+                        reader.ReadNextBlock();
+                        break;
+                }
+            }
+
+            var ____result = new ");
+}
+else
+{
+            this.Write(@"
+                    default:
+                        var unknownData = reader.ReadNextBlockSegment();
+                        var unknownDataStr = System.Text.Encoding.UTF8.GetString(unknownData.Array, unknownData.Offset, unknownData.Count);
+                        unknownDataStr = unknownDataStr.Trim();
+                        if (unknownDataStr.StartsWith(""\"""") && unknownDataStr.EndsWith(""\""""))
+                            unknownDataStr = unknownDataStr.Substring(1, unknownDataStr.Length - 2);
+
+                        __additionalDataDict__.Add(System.Text.Encoding.UTF8.GetString(stringKey.Array, stringKey.Offset, stringKey.Count), unknownDataStr);
+                        break;
+                }
+            }
+
+            var ____result = new ");
+}
+
             #line 111 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\FormatterTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(objInfo.GetConstructorString()));
             
@@ -364,8 +395,17 @@ namespace Utf8Json.CodeGenerator.Generator
             this.Write("__;\r\n");
             
             #line 114 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\FormatterTemplate.tt"
- } 
-            
+ }
+
+if (extensionDataMember != null)
+{
+var memberName = this.ToStringHelper.ToStringWithCulture(extensionDataMember.MemberName);
+
+             this.Write($@"
+            if(!__{memberName}__b__) ____result.{memberName}  = __additionalDataDict__;
+");
+}
+
             #line default
             #line hidden
             this.Write("\r\n            return ____result;\r\n");

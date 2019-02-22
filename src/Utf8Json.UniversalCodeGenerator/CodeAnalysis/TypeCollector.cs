@@ -20,6 +20,9 @@ namespace Utf8Json.UniversalCodeGenerator
         public readonly string JsonObjectSerializationModeValueOptIn;
         public readonly string JsonProperty;
         public readonly string JsonPropertyName;
+        public readonly string JsonExtension;
+        public readonly string JsonExtensionReadable;
+        public readonly string JsonExtensionWritable;
 
         public ReferenceSymbols(Compilation compilation)
         {
@@ -39,6 +42,9 @@ namespace Utf8Json.UniversalCodeGenerator
             JsonObjectSerializationModeValueOptIn = "OptIn";
             JsonProperty = "JsonProperty";
             JsonPropertyName = "PropertyName";
+            JsonExtension = "JsonExtensionData";
+            JsonExtensionReadable = "ReadData";
+            JsonExtensionWritable = "WriteData";
         }
     }
 
@@ -408,28 +414,56 @@ namespace Utf8Json.UniversalCodeGenerator
             var isMarkedOptIn = dataContractAttribute != null ||
                 jsonObjectAttribute?.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonObjectSerializationModeKey) == typeReferences.JsonObjectSerializationModeValueOptIn;
 
+            var jsonExtensionAttributeEncountered = false;
+
             var stringMembers = new Dictionary<string, MemberSerializationInfo>();
 
             foreach (var item in type.GetAllMembers().OfType<IPropertySymbol>().Where(x => !x.IsOverride))
             {
                 if (item.GetAttributes().FindAttributeShortName(typeReferences.IgnoreDataMemberAttribute) != null) continue;
-                if (isMarkedOptIn && item.GetAttributes().FindAttributeShortName(typeReferences.DataMemberAttribute) == null && item.GetAttributes().FindAttributeShortName(typeReferences.JsonProperty) == null) continue;
                 if (item.IsIndexer) continue;
 
-                var dm = item.GetAttributes().FindAttributeShortName(typeReferences.DataMemberAttribute);
-                var jp = item.GetAttributes().FindAttributeShortName(typeReferences.JsonProperty);
+                var dataMemberAttrib = item.GetAttributes().FindAttributeShortName(typeReferences.DataMemberAttribute);
+                var jsonPropertyAttrib = item.GetAttributes().FindAttributeShortName(typeReferences.JsonProperty);
+                var jsonExtensionAttrib = item.GetAttributes().FindAttributeShortName(typeReferences.JsonExtension);
+
+                if (isMarkedOptIn && dataMemberAttrib == null && jsonPropertyAttrib == null && jsonExtensionAttrib == null) continue;
+
+                if (jsonExtensionAttrib != null)
+                {
+                    if (jsonExtensionAttributeEncountered)
+                        throw new Exception("Json extension attribute should only appear once");
+
+                    if (!item.Type.Name.Contains("Dictionary") && !item.Type.AllInterfaces.Any(i => i.Name.Contains("Dictionary")))
+                        throw new Exception("Json extension attribute should be adorned on a Dictionary type");
+
+                    jsonExtensionAttributeEncountered = true;
+                }
 
                 var name = item.Name;
-                if (dm != null) { name = dm.GetSingleNamedArgumentValueFromSyntaxTree("Name"); }
-                else if (jp != null) { name = jp.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonPropertyName); }
+                if (dataMemberAttrib != null) { name = dataMemberAttrib.GetSingleNamedArgumentValueFromSyntaxTree("Name"); }
+                else if (jsonPropertyAttrib != null) { name = jsonPropertyAttrib.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonPropertyName); }
+
+                bool isReadable, isWritable;
+                if (jsonExtensionAttrib == null)
+                {
+                    isReadable = (item.GetMethod != null) && item.GetMethod.DeclaredAccessibility == Accessibility.Public && !item.IsStatic;
+                    isWritable = (item.SetMethod != null) && item.SetMethod.DeclaredAccessibility == Accessibility.Public && !item.IsStatic;
+                }
+                else
+                {
+                    isReadable = (item.GetMethod != null) && bool.Parse(jsonExtensionAttrib.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonExtensionWritable) ?? "true");
+                    isWritable = (item.SetMethod != null) && bool.Parse(jsonExtensionAttrib.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonExtensionReadable) ?? "true");
+                }
 
                 var member = new MemberSerializationInfo
                 {
-                    IsReadable = (item.GetMethod != null) && item.GetMethod.DeclaredAccessibility == Accessibility.Public && !item.IsStatic,
-                    IsWritable = (item.SetMethod != null) && item.SetMethod.DeclaredAccessibility == Accessibility.Public && !item.IsStatic,
+                    IsReadable = isReadable,
+                    IsWritable = isWritable,
                     MemberName = item.Name,
                     IsProperty = true,
                     IsField = false,
+                    IsExtensionData = jsonExtensionAttrib != null,
                     Name = name,
                     Type = item.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                     ShortTypeName = item.Type.ToDisplayString(binaryWriteFormat)
@@ -443,23 +477,49 @@ namespace Utf8Json.UniversalCodeGenerator
             foreach (var item in type.GetAllMembers().OfType<IFieldSymbol>())
             {
                 if (item.GetAttributes().FindAttributeShortName(typeReferences.IgnoreDataMemberAttribute) != null) continue;
-                if (isMarkedOptIn && item.GetAttributes().FindAttributeShortName(typeReferences.DataMemberAttribute) == null && item.GetAttributes().FindAttributeShortName(typeReferences.JsonProperty) == null) continue;
                 if (item.IsImplicitlyDeclared) continue;
 
-                var dm = item.GetAttributes().FindAttributeShortName(typeReferences.DataMemberAttribute);
-                var jp = item.GetAttributes().FindAttributeShortName(typeReferences.JsonProperty);
+                var dataMemberAttrib = item.GetAttributes().FindAttributeShortName(typeReferences.DataMemberAttribute);
+                var jsonPropertyAttrib = item.GetAttributes().FindAttributeShortName(typeReferences.JsonProperty);
+                var jsonExtensionAttrib = item.GetAttributes().FindAttributeShortName(typeReferences.JsonExtension);
+
+                if (isMarkedOptIn && dataMemberAttrib == null && jsonPropertyAttrib == null && jsonExtensionAttrib == null) continue;
+
+                if (jsonExtensionAttrib != null)
+                {
+                    if (jsonExtensionAttributeEncountered)
+                        throw new Exception("Json extension attribute should only appear once");
+
+                    if (!item.Type.Name.Contains("Dictionary") && !item.Type.AllInterfaces.Any(i => i.Name.Contains("Dictionary")))
+                        throw new Exception("Json extension attribute should be adorned on a Dictionary type");
+
+                    jsonExtensionAttributeEncountered = true;
+                }
 
                 var name = item.Name;
-                if (dm != null) { name = dm.GetSingleNamedArgumentValueFromSyntaxTree("Name"); }
-                else if (jp != null) { name = jp.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonPropertyName); }
+                if (dataMemberAttrib != null) { name = dataMemberAttrib.GetSingleNamedArgumentValueFromSyntaxTree("Name"); }
+                else if (jsonPropertyAttrib != null) { name = jsonPropertyAttrib.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonPropertyName); }
+
+                bool isReadable, isWritable;
+                if (jsonExtensionAttrib == null)
+                {
+                    isReadable = item.DeclaredAccessibility == Accessibility.Public && !item.IsStatic;
+                    isWritable = item.DeclaredAccessibility == Accessibility.Public && !item.IsReadOnly && !item.IsStatic;
+                }
+                else
+                {
+                    isReadable = bool.Parse(jsonExtensionAttrib.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonExtensionWritable) ?? "true");
+                    isWritable = bool.Parse(jsonExtensionAttrib.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonExtensionReadable) ?? "true");
+                }
 
                 var member = new MemberSerializationInfo
                 {
-                    IsReadable = item.DeclaredAccessibility == Accessibility.Public && !item.IsStatic,
-                    IsWritable = item.DeclaredAccessibility == Accessibility.Public && !item.IsReadOnly && !item.IsStatic,
+                    IsReadable = isReadable,
+                    IsWritable = isWritable,
                     MemberName = item.Name,
                     IsProperty = false,
                     IsField = true,
+                    IsExtensionData = jsonExtensionAttrib != null,
                     Name = name,
                     Type = item.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                     ShortTypeName = item.Type.ToDisplayString(binaryWriteFormat)

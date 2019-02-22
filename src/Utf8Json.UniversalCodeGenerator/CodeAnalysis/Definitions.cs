@@ -45,6 +45,7 @@ namespace Utf8Json.UniversalCodeGenerator
         public bool IsField { get; set; }
         public bool IsWritable { get; set; }
         public bool IsReadable { get; set; }
+        public bool IsExtensionData { get; set; }
         public string Type { get; set; }
         public string Name { get; set; }
         public string MemberName { get; set; }

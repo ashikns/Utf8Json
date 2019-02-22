@@ -10,21 +10,35 @@ namespace Utf8Json.UniversalCodeGenerator
     {
         public readonly INamedTypeSymbol Task;
         public readonly INamedTypeSymbol TaskOfT;
+        public readonly string DataContractAttribute;
         public readonly string DataMemberAttribute;
         public readonly string IgnoreDataMemberAttribute;
         public readonly string SerializationConstructorAttribute;
+
+        public readonly string JsonObject;
+        public readonly string JsonObjectSerializationModeKey;
+        public readonly string JsonObjectSerializationModeValueOptIn;
+        public readonly string JsonProperty;
+        public readonly string JsonPropertyName;
 
         public ReferenceSymbols(Compilation compilation)
         {
             TaskOfT = compilation.GetTypeByMetadataName("System.Threading.Tasks.Task`1");
             Task = compilation.GetTypeByMetadataName("System.Threading.Tasks.Task");
 
+            DataContractAttribute = "DataContract";
             DataMemberAttribute = "DataMember";
             IgnoreDataMemberAttribute = "IgnoreDataMember";
             SerializationConstructorAttribute = "SerializationConstructor";
             //DataMemberAttribute = compilation.GetTypeByMetadataName("System.Runtime.Serialization.DataMemberAttribute");
             //IgnoreDataMemberAttribute = compilation.GetTypeByMetadataName("System.Runtime.Serialization.IgnoreDataMemberAttribute");
             //SerializationConstructorAttribute = compilation.GetTypeByMetadataName("Utf8Json.SerializationConstructorAttribute");
+
+            JsonObject = "JsonObject";
+            JsonObjectSerializationModeKey = "MemberSerialization";
+            JsonObjectSerializationModeValueOptIn = "OptIn";
+            JsonProperty = "JsonProperty";
+            JsonPropertyName = "PropertyName";
         }
     }
 
@@ -389,16 +403,25 @@ namespace Utf8Json.UniversalCodeGenerator
         {
             var isClass = !type.IsValueType;
 
+            var dataContractAttribute = type.GetAttributes().FindAttributeShortName(typeReferences.DataContractAttribute);
+            var jsonObjectAttribute = type.GetAttributes().FindAttributeShortName(typeReferences.JsonObject);
+            var isMarkedOptIn = dataContractAttribute != null ||
+                jsonObjectAttribute?.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonObjectSerializationModeKey) == typeReferences.JsonObjectSerializationModeValueOptIn;
+
             var stringMembers = new Dictionary<string, MemberSerializationInfo>();
 
             foreach (var item in type.GetAllMembers().OfType<IPropertySymbol>().Where(x => !x.IsOverride))
             {
                 if (item.GetAttributes().FindAttributeShortName(typeReferences.IgnoreDataMemberAttribute) != null) continue;
+                if (isMarkedOptIn && item.GetAttributes().FindAttributeShortName(typeReferences.DataMemberAttribute) == null && item.GetAttributes().FindAttributeShortName(typeReferences.JsonProperty) == null) continue;
                 if (item.IsIndexer) continue;
 
                 var dm = item.GetAttributes().FindAttributeShortName(typeReferences.DataMemberAttribute);
+                var jp = item.GetAttributes().FindAttributeShortName(typeReferences.JsonProperty);
 
-                var name = (dm.GetSingleNamedArgumentValueFromSyntaxTree("Name") as string) ?? item.Name;
+                var name = item.Name;
+                if (dm != null) { name = dm.GetSingleNamedArgumentValueFromSyntaxTree("Name"); }
+                else if (jp != null) { name = jp.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonPropertyName); }
 
                 var member = new MemberSerializationInfo
                 {
@@ -420,10 +443,15 @@ namespace Utf8Json.UniversalCodeGenerator
             foreach (var item in type.GetAllMembers().OfType<IFieldSymbol>())
             {
                 if (item.GetAttributes().FindAttributeShortName(typeReferences.IgnoreDataMemberAttribute) != null) continue;
+                if (isMarkedOptIn && item.GetAttributes().FindAttributeShortName(typeReferences.DataMemberAttribute) == null && item.GetAttributes().FindAttributeShortName(typeReferences.JsonProperty) == null) continue;
                 if (item.IsImplicitlyDeclared) continue;
 
                 var dm = item.GetAttributes().FindAttributeShortName(typeReferences.DataMemberAttribute);
-                var name = (dm.GetSingleNamedArgumentValueFromSyntaxTree("Name") as string) ?? item.Name;
+                var jp = item.GetAttributes().FindAttributeShortName(typeReferences.JsonProperty);
+
+                var name = item.Name;
+                if (dm != null) { name = dm.GetSingleNamedArgumentValueFromSyntaxTree("Name"); }
+                else if (jp != null) { name = jp.GetSingleNamedArgumentValueFromSyntaxTree(typeReferences.JsonPropertyName); }
 
                 var member = new MemberSerializationInfo
                 {

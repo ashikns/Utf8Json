@@ -192,7 +192,7 @@ namespace Utf8Json.UniversalCodeGenerator
                 .FirstOrDefault();
         }
 
-        public static object GetSingleNamedArgumentValueFromSyntaxTree(this AttributeData attribute, string key)
+        public static string GetSingleNamedArgumentValueFromSyntaxTree(this AttributeData attribute, string key)
         {
             if (attribute == null) return null;
 
@@ -201,7 +201,8 @@ namespace Utf8Json.UniversalCodeGenerator
             {
                 if (p.NameEquals.Name.Identifier.ValueText == key)
                 {
-                    return (p.Expression as LiteralExpressionSyntax).Token.ValueText;
+                    if (p.Expression is LiteralExpressionSyntax) return (p.Expression as LiteralExpressionSyntax).Token.ValueText;
+                    if (p.Expression is MemberAccessExpressionSyntax) return (p.Expression as MemberAccessExpressionSyntax).Name.ToString();
                 }
             }
 

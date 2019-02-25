@@ -155,12 +155,12 @@ namespace Utf8Json.Formatters.Internal
 namespace Utf8Json.Formatters
 {
 
-    public sealed class TupleFormatter<T1> : IJsonFormatter<Tuple<T1>>
+    public sealed class TupleFormatter<T1> : JsonFormatterBase<Tuple<T1>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache1;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary1;
 
-        public void Serialize(ref JsonWriter writer, Tuple<T1> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Tuple<T1> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
             
@@ -169,7 +169,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public Tuple<T1> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Tuple<T1> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -203,12 +203,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class TupleFormatter<T1, T2> : IJsonFormatter<Tuple<T1, T2>>
+    public sealed class TupleFormatter<T1, T2> : JsonFormatterBase<Tuple<T1, T2>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache2;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary2;
 
-        public void Serialize(ref JsonWriter writer, Tuple<T1, T2> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Tuple<T1, T2> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
             
@@ -219,7 +219,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public Tuple<T1, T2> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Tuple<T1, T2> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -257,12 +257,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class TupleFormatter<T1, T2, T3> : IJsonFormatter<Tuple<T1, T2, T3>>
+    public sealed class TupleFormatter<T1, T2, T3> : JsonFormatterBase<Tuple<T1, T2, T3>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache3;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary3;
 
-        public void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
             
@@ -275,7 +275,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public Tuple<T1, T2, T3> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Tuple<T1, T2, T3> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -317,12 +317,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class TupleFormatter<T1, T2, T3, T4> : IJsonFormatter<Tuple<T1, T2, T3, T4>>
+    public sealed class TupleFormatter<T1, T2, T3, T4> : JsonFormatterBase<Tuple<T1, T2, T3, T4>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache4;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary4;
 
-        public void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3, T4> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3, T4> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
             
@@ -337,7 +337,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public Tuple<T1, T2, T3, T4> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Tuple<T1, T2, T3, T4> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -383,12 +383,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class TupleFormatter<T1, T2, T3, T4, T5> : IJsonFormatter<Tuple<T1, T2, T3, T4, T5>>
+    public sealed class TupleFormatter<T1, T2, T3, T4, T5> : JsonFormatterBase<Tuple<T1, T2, T3, T4, T5>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache5;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary5;
 
-        public void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3, T4, T5> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3, T4, T5> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
             
@@ -405,7 +405,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public Tuple<T1, T2, T3, T4, T5> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Tuple<T1, T2, T3, T4, T5> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -455,12 +455,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class TupleFormatter<T1, T2, T3, T4, T5, T6> : IJsonFormatter<Tuple<T1, T2, T3, T4, T5, T6>>
+    public sealed class TupleFormatter<T1, T2, T3, T4, T5, T6> : JsonFormatterBase<Tuple<T1, T2, T3, T4, T5, T6>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache6;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary6;
 
-        public void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3, T4, T5, T6> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3, T4, T5, T6> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
             
@@ -479,7 +479,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public Tuple<T1, T2, T3, T4, T5, T6> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Tuple<T1, T2, T3, T4, T5, T6> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -533,12 +533,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class TupleFormatter<T1, T2, T3, T4, T5, T6, T7> : IJsonFormatter<Tuple<T1, T2, T3, T4, T5, T6, T7>>
+    public sealed class TupleFormatter<T1, T2, T3, T4, T5, T6, T7> : JsonFormatterBase<Tuple<T1, T2, T3, T4, T5, T6, T7>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache7;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary7;
 
-        public void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3, T4, T5, T6, T7> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3, T4, T5, T6, T7> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
             
@@ -559,7 +559,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public Tuple<T1, T2, T3, T4, T5, T6, T7> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Tuple<T1, T2, T3, T4, T5, T6, T7> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -617,12 +617,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class TupleFormatter<T1, T2, T3, T4, T5, T6, T7, TRest> : IJsonFormatter<Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>>
+    public sealed class TupleFormatter<T1, T2, T3, T4, T5, T6, T7, TRest> : JsonFormatterBase<Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache8;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary8;
 
-        public void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
             
@@ -645,7 +645,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 

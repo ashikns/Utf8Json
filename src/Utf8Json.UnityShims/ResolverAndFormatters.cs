@@ -118,7 +118,7 @@ namespace Utf8Json.Unity
     using Utf8Json;
 
 
-    public sealed class Vector2Formatter : global::Utf8Json.IJsonFormatter<global::UnityEngine.Vector2>
+    public sealed class Vector2Formatter : global::Utf8Json.JsonFormatterBase<global::UnityEngine.Vector2>
     {
         readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
         readonly byte[][] ____stringByteKeys;
@@ -139,7 +139,7 @@ namespace Utf8Json.Unity
             };
         }
 
-        public void Serialize(ref JsonWriter writer, global::UnityEngine.Vector2 value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, global::UnityEngine.Vector2 value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
 
 
@@ -151,7 +151,7 @@ namespace Utf8Json.Unity
             writer.WriteEndObject();
         }
 
-        public global::UnityEngine.Vector2 Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override global::UnityEngine.Vector2 Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -200,7 +200,7 @@ namespace Utf8Json.Unity
     }
 
 
-    public sealed class Vector3Formatter : global::Utf8Json.IJsonFormatter<global::UnityEngine.Vector3>
+    public sealed class Vector3Formatter : global::Utf8Json.JsonFormatterBase<global::UnityEngine.Vector3>
     {
         readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
         readonly byte[][] ____stringByteKeys;
@@ -223,7 +223,7 @@ namespace Utf8Json.Unity
             };
         }
 
-        public void Serialize(ref JsonWriter writer, global::UnityEngine.Vector3 value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, global::UnityEngine.Vector3 value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
 
 
@@ -237,7 +237,7 @@ namespace Utf8Json.Unity
             writer.WriteEndObject();
         }
 
-        public global::UnityEngine.Vector3 Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override global::UnityEngine.Vector3 Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -291,7 +291,7 @@ namespace Utf8Json.Unity
     }
 
 
-    public sealed class Vector4Formatter : global::Utf8Json.IJsonFormatter<global::UnityEngine.Vector4>
+    public sealed class Vector4Formatter : global::Utf8Json.JsonFormatterBase<global::UnityEngine.Vector4>
     {
         readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
         readonly byte[][] ____stringByteKeys;
@@ -316,7 +316,7 @@ namespace Utf8Json.Unity
             };
         }
 
-        public void Serialize(ref JsonWriter writer, global::UnityEngine.Vector4 value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, global::UnityEngine.Vector4 value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
 
 
@@ -332,7 +332,7 @@ namespace Utf8Json.Unity
             writer.WriteEndObject();
         }
 
-        public global::UnityEngine.Vector4 Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override global::UnityEngine.Vector4 Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -391,7 +391,7 @@ namespace Utf8Json.Unity
     }
 
 
-    public sealed class QuaternionFormatter : global::Utf8Json.IJsonFormatter<global::UnityEngine.Quaternion>
+    public sealed class QuaternionFormatter : global::Utf8Json.JsonFormatterBase<global::UnityEngine.Quaternion>
     {
         readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
         readonly byte[][] ____stringByteKeys;
@@ -416,7 +416,7 @@ namespace Utf8Json.Unity
             };
         }
 
-        public void Serialize(ref JsonWriter writer, global::UnityEngine.Quaternion value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, global::UnityEngine.Quaternion value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
 
 
@@ -432,7 +432,7 @@ namespace Utf8Json.Unity
             writer.WriteEndObject();
         }
 
-        public global::UnityEngine.Quaternion Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override global::UnityEngine.Quaternion Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -491,7 +491,7 @@ namespace Utf8Json.Unity
     }
 
 
-    public sealed class ColorFormatter : global::Utf8Json.IJsonFormatter<global::UnityEngine.Color>
+    public sealed class ColorFormatter : global::Utf8Json.JsonFormatterBase<global::UnityEngine.Color>
     {
         readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
         readonly byte[][] ____stringByteKeys;
@@ -516,7 +516,7 @@ namespace Utf8Json.Unity
             };
         }
 
-        public void Serialize(ref JsonWriter writer, global::UnityEngine.Color value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, global::UnityEngine.Color value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
 
 
@@ -532,7 +532,7 @@ namespace Utf8Json.Unity
             writer.WriteEndObject();
         }
 
-        public global::UnityEngine.Color Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override global::UnityEngine.Color Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -591,7 +591,7 @@ namespace Utf8Json.Unity
     }
 
 
-    public sealed class BoundsFormatter : global::Utf8Json.IJsonFormatter<global::UnityEngine.Bounds>
+    public sealed class BoundsFormatter : global::Utf8Json.JsonFormatterBase<global::UnityEngine.Bounds>
     {
         readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
         readonly byte[][] ____stringByteKeys;
@@ -612,7 +612,7 @@ namespace Utf8Json.Unity
             };
         }
 
-        public void Serialize(ref JsonWriter writer, global::UnityEngine.Bounds value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, global::UnityEngine.Bounds value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
 
 
@@ -624,7 +624,7 @@ namespace Utf8Json.Unity
             writer.WriteEndObject();
         }
 
-        public global::UnityEngine.Bounds Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override global::UnityEngine.Bounds Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -673,7 +673,7 @@ namespace Utf8Json.Unity
     }
 
 
-    public sealed class RectFormatter : global::Utf8Json.IJsonFormatter<global::UnityEngine.Rect>
+    public sealed class RectFormatter : global::Utf8Json.JsonFormatterBase<global::UnityEngine.Rect>
     {
         readonly global::Utf8Json.Internal.AutomataDictionary ____keyMapping;
         readonly byte[][] ____stringByteKeys;
@@ -698,7 +698,7 @@ namespace Utf8Json.Unity
             };
         }
 
-        public void Serialize(ref JsonWriter writer, global::UnityEngine.Rect value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, global::UnityEngine.Rect value, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
 
 
@@ -714,7 +714,7 @@ namespace Utf8Json.Unity
             writer.WriteEndObject();
         }
 
-        public global::UnityEngine.Rect Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
+        public override global::UnityEngine.Rect Deserialize(ref JsonReader reader, global::Utf8Json.IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {

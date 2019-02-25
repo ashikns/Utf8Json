@@ -128,7 +128,7 @@ namespace Utf8Json.Formatters
 namespace Utf8Json.Formatters
 {
     // can inehrit for set optimize manual serialize/deserialize func.
-    public class EnumFormatter<T> : IJsonFormatter<T>, IObjectPropertyNameFormatter<T>
+    public class EnumFormatter<T> : JsonFormatterBase<T>, IObjectPropertyNameFormatter<T>
     {
         readonly static ByteArrayStringHashTable<T> nameValueMapping;
         readonly static Dictionary<T, string> valueNameMapping;
@@ -220,7 +220,7 @@ namespace Utf8Json.Formatters
             this.deserializeByUnderlyingValue = valueDeserializeAction;
         }
 
-        public void Serialize(ref JsonWriter writer, T value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, T value, IJsonFormatterResolver formatterResolver)
         {
             if (serializeByName)
             {
@@ -237,7 +237,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public T Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override T Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var token = reader.GetCurrentJsonToken();
 

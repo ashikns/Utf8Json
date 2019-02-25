@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Utf8Json.Formatters
 {
-    public sealed class PrimitiveObjectFormatter : IJsonFormatter<object>
+    public sealed class PrimitiveObjectFormatter : JsonFormatterBase<object>
     {
         public static readonly IJsonFormatter<object> Default = new PrimitiveObjectFormatter();
 
@@ -27,7 +27,7 @@ namespace Utf8Json.Formatters
             { typeof(byte[]), 14 }
         };
 
-        public void Serialize(ref JsonWriter writer, object value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, object value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -100,7 +100,7 @@ namespace Utf8Json.Formatters
             throw new InvalidOperationException("Not supported primitive object resolver. type:" + t.Name);
         }
 
-        public object Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override object Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var token = reader.GetCurrentJsonToken();
             switch (token)

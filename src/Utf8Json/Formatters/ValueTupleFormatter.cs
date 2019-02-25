@@ -155,19 +155,19 @@ namespace Utf8Json.Formatters.Internal
 namespace Utf8Json.Formatters
 {
 
-    public sealed class ValueTupleFormatter<T1> : IJsonFormatter<ValueTuple<T1>>
+    public sealed class ValueTupleFormatter<T1> : JsonFormatterBase<ValueTuple<T1>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache1;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary1;
 
-        public void Serialize(ref JsonWriter writer, ValueTuple<T1> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ValueTuple<T1> value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteRaw(cache[0]);
             formatterResolver.GetFormatterWithVerify<T1>().Serialize(ref writer, value.Item1, formatterResolver);
             writer.WriteEndObject();
         }
 
-        public ValueTuple<T1> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ValueTuple<T1> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) throw new InvalidOperationException("Data is Nil, ValueTuple can not be null.");
 
@@ -201,12 +201,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class ValueTupleFormatter<T1, T2> : IJsonFormatter<ValueTuple<T1, T2>>
+    public sealed class ValueTupleFormatter<T1, T2> : JsonFormatterBase<ValueTuple<T1, T2>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache2;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary2;
 
-        public void Serialize(ref JsonWriter writer, ValueTuple<T1, T2> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ValueTuple<T1, T2> value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteRaw(cache[0]);
             formatterResolver.GetFormatterWithVerify<T1>().Serialize(ref writer, value.Item1, formatterResolver);
@@ -215,7 +215,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public ValueTuple<T1, T2> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ValueTuple<T1, T2> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) throw new InvalidOperationException("Data is Nil, ValueTuple can not be null.");
 
@@ -253,12 +253,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class ValueTupleFormatter<T1, T2, T3> : IJsonFormatter<ValueTuple<T1, T2, T3>>
+    public sealed class ValueTupleFormatter<T1, T2, T3> : JsonFormatterBase<ValueTuple<T1, T2, T3>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache3;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary3;
 
-        public void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3> value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteRaw(cache[0]);
             formatterResolver.GetFormatterWithVerify<T1>().Serialize(ref writer, value.Item1, formatterResolver);
@@ -269,7 +269,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public ValueTuple<T1, T2, T3> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ValueTuple<T1, T2, T3> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) throw new InvalidOperationException("Data is Nil, ValueTuple can not be null.");
 
@@ -311,12 +311,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class ValueTupleFormatter<T1, T2, T3, T4> : IJsonFormatter<ValueTuple<T1, T2, T3, T4>>
+    public sealed class ValueTupleFormatter<T1, T2, T3, T4> : JsonFormatterBase<ValueTuple<T1, T2, T3, T4>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache4;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary4;
 
-        public void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3, T4> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3, T4> value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteRaw(cache[0]);
             formatterResolver.GetFormatterWithVerify<T1>().Serialize(ref writer, value.Item1, formatterResolver);
@@ -329,7 +329,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public ValueTuple<T1, T2, T3, T4> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ValueTuple<T1, T2, T3, T4> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) throw new InvalidOperationException("Data is Nil, ValueTuple can not be null.");
 
@@ -375,12 +375,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class ValueTupleFormatter<T1, T2, T3, T4, T5> : IJsonFormatter<ValueTuple<T1, T2, T3, T4, T5>>
+    public sealed class ValueTupleFormatter<T1, T2, T3, T4, T5> : JsonFormatterBase<ValueTuple<T1, T2, T3, T4, T5>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache5;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary5;
 
-        public void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3, T4, T5> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3, T4, T5> value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteRaw(cache[0]);
             formatterResolver.GetFormatterWithVerify<T1>().Serialize(ref writer, value.Item1, formatterResolver);
@@ -395,7 +395,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public ValueTuple<T1, T2, T3, T4, T5> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ValueTuple<T1, T2, T3, T4, T5> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) throw new InvalidOperationException("Data is Nil, ValueTuple can not be null.");
 
@@ -445,12 +445,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class ValueTupleFormatter<T1, T2, T3, T4, T5, T6> : IJsonFormatter<ValueTuple<T1, T2, T3, T4, T5, T6>>
+    public sealed class ValueTupleFormatter<T1, T2, T3, T4, T5, T6> : JsonFormatterBase<ValueTuple<T1, T2, T3, T4, T5, T6>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache6;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary6;
 
-        public void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3, T4, T5, T6> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3, T4, T5, T6> value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteRaw(cache[0]);
             formatterResolver.GetFormatterWithVerify<T1>().Serialize(ref writer, value.Item1, formatterResolver);
@@ -467,7 +467,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public ValueTuple<T1, T2, T3, T4, T5, T6> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ValueTuple<T1, T2, T3, T4, T5, T6> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) throw new InvalidOperationException("Data is Nil, ValueTuple can not be null.");
 
@@ -521,12 +521,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class ValueTupleFormatter<T1, T2, T3, T4, T5, T6, T7> : IJsonFormatter<ValueTuple<T1, T2, T3, T4, T5, T6, T7>>
+    public sealed class ValueTupleFormatter<T1, T2, T3, T4, T5, T6, T7> : JsonFormatterBase<ValueTuple<T1, T2, T3, T4, T5, T6, T7>>
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache7;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary7;
 
-        public void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3, T4, T5, T6, T7> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3, T4, T5, T6, T7> value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteRaw(cache[0]);
             formatterResolver.GetFormatterWithVerify<T1>().Serialize(ref writer, value.Item1, formatterResolver);
@@ -545,7 +545,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public ValueTuple<T1, T2, T3, T4, T5, T6, T7> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ValueTuple<T1, T2, T3, T4, T5, T6, T7> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) throw new InvalidOperationException("Data is Nil, ValueTuple can not be null.");
 
@@ -603,12 +603,12 @@ namespace Utf8Json.Formatters
     }
 
 
-    public sealed class ValueTupleFormatter<T1, T2, T3, T4, T5, T6, T7, TRest> : IJsonFormatter<ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>> where TRest : struct
+    public sealed class ValueTupleFormatter<T1, T2, T3, T4, T5, T6, T7, TRest> : JsonFormatterBase<ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>> where TRest : struct
     {
         static readonly byte[][] cache = TupleFormatterHelper.nameCache8;
         static readonly AutomataDictionary dictionary = TupleFormatterHelper.dictionary8;
 
-        public void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteRaw(cache[0]);
             formatterResolver.GetFormatterWithVerify<T1>().Serialize(ref writer, value.Item1, formatterResolver);
@@ -629,7 +629,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) throw new InvalidOperationException("Data is Nil, ValueTuple can not be null.");
 

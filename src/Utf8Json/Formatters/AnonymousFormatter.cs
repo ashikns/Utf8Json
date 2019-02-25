@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NET_4_6
+using System;
 
 namespace Utf8Json.Formatters
 {
@@ -26,3 +27,4 @@ namespace Utf8Json.Formatters
         }
     }
 }
+#endif

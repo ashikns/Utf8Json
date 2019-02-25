@@ -6,7 +6,7 @@ using Utf8Json.Internal;
 
 namespace Utf8Json.Formatters
 {
-    public sealed class DateTimeFormatter : IJsonFormatter<DateTime>
+    public sealed class DateTimeFormatter : JsonFormatterBase<DateTime>
     {
         readonly string formatString;
 
@@ -20,12 +20,12 @@ namespace Utf8Json.Formatters
             this.formatString = formatString;
         }
 
-        public void Serialize(ref JsonWriter writer, DateTime value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, DateTime value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteString(value.ToString(formatString));
         }
 
-        public DateTime Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override DateTime Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var str = reader.ReadString();
             if (formatString == null)
@@ -39,7 +39,7 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class NullableDateTimeFormatter : IJsonFormatter<DateTime?>
+    public sealed class NullableDateTimeFormatter : JsonFormatterBase<DateTime?>
     {
         readonly DateTimeFormatter innerFormatter;
 
@@ -53,14 +53,14 @@ namespace Utf8Json.Formatters
             this.innerFormatter = new DateTimeFormatter(formatString);
         }
 
-        public void Serialize(ref JsonWriter writer, DateTime? value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, DateTime? value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
 
             innerFormatter.Serialize(ref writer, value.Value, formatterResolver);
         }
 
-        public DateTime? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override DateTime? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -68,11 +68,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class ISO8601DateTimeFormatter : IJsonFormatter<DateTime>
+    public sealed class ISO8601DateTimeFormatter : JsonFormatterBase<DateTime>
     {
         public static readonly IJsonFormatter<DateTime> Default = new ISO8601DateTimeFormatter();
 
-        public void Serialize(ref JsonWriter writer, DateTime value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, DateTime value, IJsonFormatterResolver formatterResolver)
         {
             var year = value.Year;
             var month = value.Month;
@@ -236,7 +236,7 @@ namespace Utf8Json.Formatters
             writer.WriteRawUnsafe((byte)'\"');
         }
 
-        public DateTime Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override DateTime Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var str = reader.ReadStringSegmentUnsafe();
             var array = str.Array;
@@ -359,11 +359,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class UnixTimestampDateTimeFormatter : IJsonFormatter<DateTime>
+    public sealed class UnixTimestampDateTimeFormatter : JsonFormatterBase<DateTime>
     {
         static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        public void Serialize(ref JsonWriter writer, DateTime value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, DateTime value, IJsonFormatterResolver formatterResolver)
         {
             var ticks = (long)(value.ToUniversalTime() - UnixEpoch).TotalSeconds;
             writer.WriteQuotation();
@@ -371,7 +371,7 @@ namespace Utf8Json.Formatters
             writer.WriteQuotation();
         }
 
-        public DateTime Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override DateTime Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var str = reader.ReadStringSegmentUnsafe();
             int readCount;
@@ -381,7 +381,7 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class DateTimeOffsetFormatter : IJsonFormatter<DateTimeOffset>
+    public sealed class DateTimeOffsetFormatter : JsonFormatterBase<DateTimeOffset>
     {
         readonly string formatString;
 
@@ -395,12 +395,12 @@ namespace Utf8Json.Formatters
             this.formatString = formatString;
         }
 
-        public void Serialize(ref JsonWriter writer, DateTimeOffset value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, DateTimeOffset value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteString(value.ToString(formatString));
         }
 
-        public DateTimeOffset Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override DateTimeOffset Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var str = reader.ReadString();
             if (formatString == null)
@@ -414,7 +414,7 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class NullableDateTimeOffsetFormatter : IJsonFormatter<DateTimeOffset?>
+    public sealed class NullableDateTimeOffsetFormatter : JsonFormatterBase<DateTimeOffset?>
     {
         readonly DateTimeOffsetFormatter innerFormatter;
 
@@ -428,14 +428,14 @@ namespace Utf8Json.Formatters
             this.innerFormatter = new DateTimeOffsetFormatter(formatString);
         }
 
-        public void Serialize(ref JsonWriter writer, DateTimeOffset? value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, DateTimeOffset? value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
 
             innerFormatter.Serialize(ref writer, value.Value, formatterResolver);
         }
 
-        public DateTimeOffset? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override DateTimeOffset? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -443,11 +443,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class ISO8601DateTimeOffsetFormatter : IJsonFormatter<DateTimeOffset>
+    public sealed class ISO8601DateTimeOffsetFormatter : JsonFormatterBase<DateTimeOffset>
     {
         public static readonly IJsonFormatter<DateTimeOffset> Default = new ISO8601DateTimeOffsetFormatter();
 
-        public void Serialize(ref JsonWriter writer, DateTimeOffset value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, DateTimeOffset value, IJsonFormatterResolver formatterResolver)
         {
             var year = value.Year;
             var month = value.Month;
@@ -586,7 +586,7 @@ namespace Utf8Json.Formatters
             writer.WriteRawUnsafe((byte)'\"');
         }
 
-        public DateTimeOffset Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override DateTimeOffset Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var str = reader.ReadStringSegmentUnsafe();
             var array = str.Array;
@@ -704,7 +704,7 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class TimeSpanFormatter : IJsonFormatter<TimeSpan>
+    public sealed class TimeSpanFormatter : JsonFormatterBase<TimeSpan>
     {
 #if NETSTANDARD || NET_STANDARD_2_0
         readonly string formatString;
@@ -720,7 +720,7 @@ namespace Utf8Json.Formatters
         }
 #endif
 
-        public void Serialize(ref JsonWriter writer, TimeSpan value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, TimeSpan value, IJsonFormatterResolver formatterResolver)
         {
 #if NETSTANDARD || NET_STANDARD_2_0
             writer.WriteString(value.ToString(formatString));
@@ -729,7 +729,7 @@ namespace Utf8Json.Formatters
 #endif
         }
 
-        public TimeSpan Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override TimeSpan Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var str = reader.ReadString();
 #if NETSTANDARD
@@ -747,7 +747,7 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class NullableTimeSpanFormatter : IJsonFormatter<TimeSpan?>
+    public sealed class NullableTimeSpanFormatter : JsonFormatterBase<TimeSpan?>
     {
         readonly TimeSpanFormatter innerFormatter;
 
@@ -763,14 +763,14 @@ namespace Utf8Json.Formatters
         }
 #endif
 
-        public void Serialize(ref JsonWriter writer, TimeSpan? value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, TimeSpan? value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
 
             innerFormatter.Serialize(ref writer, value.Value, formatterResolver);
         }
 
-        public TimeSpan? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override TimeSpan? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -778,13 +778,13 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class ISO8601TimeSpanFormatter : IJsonFormatter<TimeSpan>
+    public sealed class ISO8601TimeSpanFormatter : JsonFormatterBase<TimeSpan>
     {
         public static readonly IJsonFormatter<TimeSpan> Default = new ISO8601TimeSpanFormatter();
 
         static byte[] minValue = StringEncoding.UTF8.GetBytes("\"" + TimeSpan.MinValue.ToString() + "\"");
 
-        public void Serialize(ref JsonWriter writer, TimeSpan value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, TimeSpan value, IJsonFormatterResolver formatterResolver)
         {
             // can not negate, use cache
             if (value == TimeSpan.MinValue)
@@ -849,7 +849,7 @@ namespace Utf8Json.Formatters
             writer.WriteRawUnsafe((byte)'\"');
         }
 
-        public TimeSpan Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override TimeSpan Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var str = reader.ReadStringSegmentUnsafe();
             var array = str.Array;

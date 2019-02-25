@@ -9,11 +9,11 @@ using System.Collections.Concurrent;
 namespace Utf8Json.Formatters
 {
     // unfortunately, can't use IDictionary<KVP> because supports IReadOnlyDictionary.
-    public abstract class DictionaryFormatterBase<TKey, TValue, TIntermediate, TEnumerator, TDictionary> : IJsonFormatter<TDictionary>
+    public abstract class DictionaryFormatterBase<TKey, TValue, TIntermediate, TEnumerator, TDictionary> : JsonFormatterBase<TDictionary>
         where TDictionary : class, IEnumerable<KeyValuePair<TKey, TValue>>
         where TEnumerator : IEnumerator<KeyValuePair<TKey, TValue>>
     {
-        public void Serialize(ref JsonWriter writer, TDictionary value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, TDictionary value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -87,7 +87,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public TDictionary Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override TDictionary Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -290,10 +290,10 @@ namespace Utf8Json.Formatters
 
 #endif
 
-    public sealed class NonGenericDictionaryFormatter<T> : IJsonFormatter<T>
+    public sealed class NonGenericDictionaryFormatter<T> : JsonFormatterBase<T>
         where T : class, System.Collections.IDictionary, new()
     {
-        public void Serialize(ref JsonWriter writer, T value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, T value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -342,7 +342,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public T Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override T Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -368,12 +368,12 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class NonGenericInterfaceDictionaryFormatter : IJsonFormatter<System.Collections.IDictionary>
+    public sealed class NonGenericInterfaceDictionaryFormatter : JsonFormatterBase<System.Collections.IDictionary>
     {
         public static readonly IJsonFormatter<System.Collections.IDictionary> Default = new NonGenericInterfaceDictionaryFormatter();
 
 
-        public void Serialize(ref JsonWriter writer, System.Collections.IDictionary value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, System.Collections.IDictionary value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -422,7 +422,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public System.Collections.IDictionary Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override System.Collections.IDictionary Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {

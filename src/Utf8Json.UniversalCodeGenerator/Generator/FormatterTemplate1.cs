@@ -50,7 +50,7 @@ namespace Utf8Json.CodeGenerator.Generator
             
             #line default
             #line hidden
-            this.Write("Formatter : global::Utf8Json.IJsonFormatter<");
+            this.Write("Formatter : global::Utf8Json.JsonFormatterBase<");
             
             #line 19 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\FormatterTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(objInfo.FullName));
@@ -136,7 +136,7 @@ namespace Utf8Json.CodeGenerator.Generator
             
             #line default
             #line hidden
-            this.Write("                \r\n            };\r\n        }\r\n\r\n        public void Serialize(ref " +
+            this.Write("                \r\n            };\r\n        }\r\n\r\n        public override void Serialize(ref " +
                     "JsonWriter writer, ");
             
             #line 44 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\FormatterTemplate.tt"
@@ -187,7 +187,7 @@ namespace Utf8Json.CodeGenerator.Generator
             
             #line default
             #line hidden
-            this.Write("            \r\n            writer.WriteEndObject();\r\n        }\r\n\r\n        public ");
+            this.Write("            \r\n            writer.WriteEndObject();\r\n        }\r\n\r\n        public override ");
             
             #line 62 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\FormatterTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(objInfo.FullName));

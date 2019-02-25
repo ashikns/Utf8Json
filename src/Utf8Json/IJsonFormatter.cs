@@ -7,6 +7,8 @@ namespace Utf8Json
 
     public interface IJsonFormatter
     {
+        void SerializeNonGeneric(ref JsonWriter writer, object value, IJsonFormatterResolver formatterResolver);
+        object DeserializeNonGeneric(ref JsonReader reader, Type type, IJsonFormatterResolver formatterResolver);
     }
 
     public interface IJsonFormatter<T> : IJsonFormatter
@@ -19,6 +21,30 @@ namespace Utf8Json
     {
         void SerializeToPropertyName(ref JsonWriter writer, T value, IJsonFormatterResolver formatterResolver);
         T DeserializeFromPropertyName(ref JsonReader reader, IJsonFormatterResolver formatterResolver);
+    }
+
+    public abstract class JsonFormatterBase<T> : IJsonFormatter<T>
+    {
+        public void SerializeNonGeneric(ref JsonWriter writer, object value, IJsonFormatterResolver formatterResolver)
+        {
+            if (!(value is T))
+            {
+                throw new Exception($"{nameof(value)} should be of type {typeof(T)}");
+            }
+            Serialize(ref writer, (T)value, formatterResolver);
+        }
+
+        public object DeserializeNonGeneric(ref JsonReader reader, Type type, IJsonFormatterResolver formatterResolver)
+        {
+            if (type != typeof(T))
+            {
+                throw new Exception($"{nameof(type)} should be of type {typeof(T)}");
+            }
+            return Deserialize(ref reader, formatterResolver);
+        }
+
+        public abstract void Serialize(ref JsonWriter writer, T value, IJsonFormatterResolver formatterResolver);
+        public abstract T Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver);
     }
 
     public static class JsonFormatterExtensions

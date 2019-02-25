@@ -17,18 +17,18 @@ namespace Utf8Json.Formatters
 {
     // MEMO:should write/read base64 directly like corefxlab/System.Binary.Base64
     // https://github.com/dotnet/corefxlab/tree/master/src/System.Binary.Base64/System/Binary
-    public sealed class ByteArrayFormatter : IJsonFormatter<byte[]>
+    public sealed class ByteArrayFormatter : JsonFormatterBase<byte[]>
     {
         public static readonly IJsonFormatter<byte[]> Default = new ByteArrayFormatter();
 
-        public void Serialize(ref JsonWriter writer, byte[] value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, byte[] value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
 
             writer.WriteString(Convert.ToBase64String(value, Base64FormattingOptions.None));
         }
 
-        public byte[] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override byte[] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -37,18 +37,18 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class ByteArraySegmentFormatter : IJsonFormatter<ArraySegment<byte>>
+    public sealed class ByteArraySegmentFormatter : JsonFormatterBase<ArraySegment<byte>>
     {
         public static readonly IJsonFormatter<ArraySegment<byte>> Default = new ByteArraySegmentFormatter();
 
-        public void Serialize(ref JsonWriter writer, ArraySegment<byte> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ArraySegment<byte> value, IJsonFormatterResolver formatterResolver)
         {
             if (value.Array == null) { writer.WriteNull(); return; }
 
             writer.WriteString(Convert.ToBase64String(value.Array, value.Offset, value.Count, Base64FormattingOptions.None));
         }
 
-        public ArraySegment<byte> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ArraySegment<byte> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return default(ArraySegment<byte>);
 
@@ -58,16 +58,16 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class NullableStringFormatter : IJsonFormatter<string>, IObjectPropertyNameFormatter<string>
+    public sealed class NullableStringFormatter : JsonFormatterBase<string>, IObjectPropertyNameFormatter<string>
     {
         public static readonly IJsonFormatter<string> Default = new NullableStringFormatter();
 
-        public void Serialize(ref JsonWriter writer, string value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, string value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteString(value);
         }
 
-        public string Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override string Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             return reader.ReadString();
         }
@@ -83,11 +83,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class NullableStringArrayFormatter : IJsonFormatter<string[]>
+    public sealed class NullableStringArrayFormatter : JsonFormatterBase<string[]>
     {
         public static readonly NullableStringArrayFormatter Default = new NullableStringArrayFormatter();
 
-        public void Serialize(ref JsonWriter writer, string[] value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, string[] value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -111,7 +111,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public string[] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override string[] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -137,27 +137,27 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class CharFormatter : IJsonFormatter<char>
+    public sealed class CharFormatter : JsonFormatterBase<char>
     {
         public static readonly CharFormatter Default = new CharFormatter();
 
         // MEMO:can be improvement write directly
-        public void Serialize(ref JsonWriter writer, char value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, char value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteString(value.ToString(CultureInfo.InvariantCulture));
         }
 
-        public char Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override char Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             return reader.ReadString()[0];
         }
     }
 
-    public sealed class NullableCharFormatter : IJsonFormatter<Char?>
+    public sealed class NullableCharFormatter : JsonFormatterBase<Char?>
     {
         public static readonly NullableCharFormatter Default = new NullableCharFormatter();
 
-        public void Serialize(ref JsonWriter writer, Char? value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Char? value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -169,7 +169,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public Char? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Char? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -182,11 +182,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class CharArrayFormatter : IJsonFormatter<char[]>
+    public sealed class CharArrayFormatter : JsonFormatterBase<char[]>
     {
         public static readonly CharArrayFormatter Default = new CharArrayFormatter();
 
-        public void Serialize(ref JsonWriter writer, char[] value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, char[] value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -210,7 +210,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public char[] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override char[] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -236,11 +236,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class GuidFormatter : IJsonFormatter<Guid>, IObjectPropertyNameFormatter<Guid>
+    public sealed class GuidFormatter : JsonFormatterBase<Guid>, IObjectPropertyNameFormatter<Guid>
     {
         public static readonly IJsonFormatter<Guid> Default = new GuidFormatter();
 
-        public void Serialize(ref JsonWriter writer, Guid value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Guid value, IJsonFormatterResolver formatterResolver)
         {
             writer.EnsureCapacity(38); // unsafe, control underlying buffer manually
 
@@ -253,7 +253,7 @@ namespace Utf8Json.Formatters
             writer.WriteRawUnsafe((byte)'\"');
         }
 
-        public Guid Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Guid Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var segment = reader.ReadStringSegmentUnsafe();
             return new GuidBits(ref segment).Value;
@@ -270,7 +270,7 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class DecimalFormatter : IJsonFormatter<decimal>
+    public sealed class DecimalFormatter : JsonFormatterBase<decimal>
     {
         public static readonly IJsonFormatter<decimal> Default = new DecimalFormatter();
 
@@ -287,7 +287,7 @@ namespace Utf8Json.Formatters
             this.serializeAsString = serializeAsString;
         }
 
-        public void Serialize(ref JsonWriter writer, decimal value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, decimal value, IJsonFormatterResolver formatterResolver)
         {
             if (serializeAsString)
             {
@@ -300,7 +300,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public decimal Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override decimal Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var token = reader.GetCurrentJsonToken();
             if (token == JsonToken.Number)
@@ -319,11 +319,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class UriFormatter : IJsonFormatter<Uri>
+    public sealed class UriFormatter : JsonFormatterBase<Uri>
     {
         public static readonly IJsonFormatter<Uri> Default = new UriFormatter();
 
-        public void Serialize(ref JsonWriter writer, Uri value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Uri value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -335,7 +335,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public Uri Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Uri Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -348,11 +348,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class VersionFormatter : IJsonFormatter<Version>
+    public sealed class VersionFormatter : JsonFormatterBase<Version>
     {
         public static readonly IJsonFormatter<Version> Default = new VersionFormatter();
 
-        public void Serialize(ref JsonWriter writer, Version value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Version value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -364,7 +364,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public Version Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Version Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -377,9 +377,9 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class KeyValuePairFormatter<TKey, TValue> : IJsonFormatter<KeyValuePair<TKey, TValue>>
+    public sealed class KeyValuePairFormatter<TKey, TValue> : JsonFormatterBase<KeyValuePair<TKey, TValue>>
     {
-        public void Serialize(ref JsonWriter writer, KeyValuePair<TKey, TValue> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, KeyValuePair<TKey, TValue> value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteRaw(StandardClassLibraryFormatterHelper.keyValuePairName[0]);
             formatterResolver.GetFormatterWithVerify<TKey>().Serialize(ref writer, value.Key, formatterResolver);
@@ -389,7 +389,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndObject();
         }
 
-        public KeyValuePair<TKey, TValue> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override KeyValuePair<TKey, TValue> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) throw new InvalidOperationException("Data is Nil, KeyValuePair can not be null.");
 
@@ -427,17 +427,17 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class StringBuilderFormatter : IJsonFormatter<StringBuilder>
+    public sealed class StringBuilderFormatter : JsonFormatterBase<StringBuilder>
     {
         public static readonly IJsonFormatter<StringBuilder> Default = new StringBuilderFormatter();
 
-        public void Serialize(ref JsonWriter writer, StringBuilder value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, StringBuilder value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
             writer.WriteString(value.ToString());
         }
 
-        public StringBuilder Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override StringBuilder Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
             return new StringBuilder(reader.ReadString());
@@ -445,11 +445,11 @@ namespace Utf8Json.Formatters
     }
 
     // BitArray can be represents other format...
-    public sealed class BitArrayFormatter : IJsonFormatter<BitArray>
+    public sealed class BitArrayFormatter : JsonFormatterBase<BitArray>
     {
         public static readonly IJsonFormatter<BitArray> Default = new BitArrayFormatter();
 
-        public void Serialize(ref JsonWriter writer, BitArray value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, BitArray value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
 
@@ -462,7 +462,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndArray();
         }
 
-        public BitArray Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override BitArray Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
             reader.ReadIsBeginArrayWithVerify();
@@ -476,7 +476,7 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class TypeFormatter : IJsonFormatter<Type>
+    public sealed class TypeFormatter : JsonFormatterBase<Type>
     {
         public static readonly TypeFormatter Default = new TypeFormatter();
 
@@ -503,7 +503,7 @@ namespace Utf8Json.Formatters
             this.throwOnError = throwOnError;
         }
 
-        public void Serialize(ref JsonWriter writer, Type value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Type value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
             if (serializeAssemblyQualifiedName)
@@ -516,7 +516,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public Type Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Type Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -533,17 +533,17 @@ namespace Utf8Json.Formatters
 
 #if NETSTANDARD || NET_STANDARD_2_0
 
-    public sealed class BigIntegerFormatter : IJsonFormatter<BigInteger>
+    public sealed class BigIntegerFormatter : JsonFormatterBase<BigInteger>
     {
         public static readonly IJsonFormatter<BigInteger> Default = new BigIntegerFormatter();
 
-        public void Serialize(ref JsonWriter writer, BigInteger value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, BigInteger value, IJsonFormatterResolver formatterResolver)
         {
             // JSON.NET writes Integer format, not compatible.
             writer.WriteString(value.ToString(CultureInfo.InvariantCulture));
         }
 
-        public BigInteger Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override BigInteger Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var s = reader.ReadString();
             return BigInteger.Parse(s, CultureInfo.InvariantCulture);
@@ -551,11 +551,11 @@ namespace Utf8Json.Formatters
     }
 
     // Convert to [Real, Imaginary]
-    public sealed class ComplexFormatter : IJsonFormatter<Complex>
+    public sealed class ComplexFormatter : JsonFormatterBase<Complex>
     {
         public static readonly IJsonFormatter<Complex> Default = new ComplexFormatter();
 
-        public void Serialize(ref JsonWriter writer, Complex value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Complex value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteBeginArray();
             writer.WriteDouble(value.Real);
@@ -564,7 +564,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndArray();
         }
 
-        public Complex Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Complex Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             reader.ReadIsBeginArrayWithVerify();
             var real = reader.ReadDouble();
@@ -576,17 +576,17 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class ExpandoObjectFormatter : IJsonFormatter<ExpandoObject>
+    public sealed class ExpandoObjectFormatter : JsonFormatterBase<ExpandoObject>
     {
         public static readonly IJsonFormatter<ExpandoObject> Default = new ExpandoObjectFormatter();
 
-        public void Serialize(ref JsonWriter writer, ExpandoObject value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ExpandoObject value, IJsonFormatterResolver formatterResolver)
         {
             var formatter = formatterResolver.GetFormatterWithVerify<IDictionary<string, object>>();
             formatter.Serialize(ref writer, (IDictionary<string, object>)value, formatterResolver);
         }
 
-        public ExpandoObject Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ExpandoObject Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var result = new ExpandoObject() as IDictionary<string, object>;
 
@@ -603,15 +603,15 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class LazyFormatter<T> : IJsonFormatter<Lazy<T>>
+    public sealed class LazyFormatter<T> : JsonFormatterBase<Lazy<T>>
     {
-        public void Serialize(ref JsonWriter writer, Lazy<T> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Lazy<T> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
             formatterResolver.GetFormatterWithVerify<T>().Serialize(ref writer, value.Value, formatterResolver);
         }
 
-        public Lazy<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Lazy<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -625,12 +625,12 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class TaskUnitFormatter : IJsonFormatter<Task>
+    public sealed class TaskUnitFormatter : JsonFormatterBase<Task>
     {
         public static readonly IJsonFormatter<Task> Default = new TaskUnitFormatter();
         static readonly Task CompletedTask = Task.FromResult<object>(null);
 
-        public void Serialize(ref JsonWriter writer, Task value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Task value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
 
@@ -638,7 +638,7 @@ namespace Utf8Json.Formatters
             writer.WriteNull();
         }
 
-        public Task Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Task Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (!reader.ReadIsNull()) throw new InvalidOperationException("Invalid input");
 
@@ -646,9 +646,9 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class TaskValueFormatter<T> : IJsonFormatter<Task<T>>
+    public sealed class TaskValueFormatter<T> : JsonFormatterBase<Task<T>>
     {
-        public void Serialize(ref JsonWriter writer, Task<T> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, Task<T> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
 
@@ -656,7 +656,7 @@ namespace Utf8Json.Formatters
             formatterResolver.GetFormatterWithVerify<T>().Serialize(ref writer, value.Result, formatterResolver);
         }
 
-        public Task<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override Task<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -665,15 +665,15 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class ValueTaskFormatter<T> : IJsonFormatter<ValueTask<T>>
+    public sealed class ValueTaskFormatter<T> : JsonFormatterBase<ValueTask<T>>
     {
-        public void Serialize(ref JsonWriter writer, ValueTask<T> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ValueTask<T> value, IJsonFormatterResolver formatterResolver)
         {
             // value.Result -> wait...!
             formatterResolver.GetFormatterWithVerify<T>().Serialize(ref writer, value.Result, formatterResolver);
         }
 
-        public ValueTask<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ValueTask<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             var v = formatterResolver.GetFormatterWithVerify<T>().Deserialize(ref reader, formatterResolver);
             return new ValueTask<T>(v);

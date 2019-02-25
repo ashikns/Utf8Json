@@ -12,11 +12,11 @@ using System.Collections.Concurrent;
 
 namespace Utf8Json.Formatters
 {
-    public class ArrayFormatter<T> : IJsonFormatter<T[]>
+    public class ArrayFormatter<T> : JsonFormatterBase<T[]>
     {
         static readonly ArrayPool<T> arrayPool = new ArrayPool<T>(99);
 
-        public void Serialize(ref JsonWriter writer, T[] value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, T[] value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
 
@@ -34,7 +34,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndArray();
         }
 
-        public T[] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override T[] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -68,11 +68,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public class ArraySegmentFormatter<T> : IJsonFormatter<ArraySegment<T>>
+    public class ArraySegmentFormatter<T> : JsonFormatterBase<ArraySegment<T>>
     {
         static readonly ArrayPool<T> arrayPool = new ArrayPool<T>(99);
 
-        public void Serialize(ref JsonWriter writer, ArraySegment<T> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ArraySegment<T> value, IJsonFormatterResolver formatterResolver)
         {
             if (value.Array == null) { writer.WriteNull(); return; }
 
@@ -95,7 +95,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndArray();
         }
 
-        public ArraySegment<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ArraySegment<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return default(ArraySegment<T>);
 
@@ -129,9 +129,9 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public class ListFormatter<T> : IJsonFormatter<List<T>>
+    public class ListFormatter<T> : JsonFormatterBase<List<T>>
     {
-        public void Serialize(ref JsonWriter writer, List<T> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, List<T> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null) { writer.WriteNull(); return; }
 
@@ -149,7 +149,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndArray();
         }
 
-        public List<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override List<T> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -167,11 +167,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public abstract class CollectionFormatterBase<TElement, TIntermediate, TEnumerator, TCollection> : IJsonFormatter<TCollection>
+    public abstract class CollectionFormatterBase<TElement, TIntermediate, TEnumerator, TCollection> : JsonFormatterBase<TCollection>
         where TCollection : class, IEnumerable<TElement>
         where TEnumerator : IEnumerator<TElement>
     {
-        public void Serialize(ref JsonWriter writer, TCollection value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, TCollection value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -209,7 +209,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public TCollection Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override TCollection Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -446,9 +446,9 @@ namespace Utf8Json.Formatters
     }
 
     // {Key:key, Elements:[Array]}  (not compatible with JSON.NET)
-    public sealed class InterfaceGroupingFormatter<TKey, TElement> : IJsonFormatter<IGrouping<TKey, TElement>>
+    public sealed class InterfaceGroupingFormatter<TKey, TElement> : JsonFormatterBase<IGrouping<TKey, TElement>>
     {
-        public void Serialize(ref JsonWriter writer, IGrouping<TKey, TElement> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, IGrouping<TKey, TElement> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -466,7 +466,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public IGrouping<TKey, TElement> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override IGrouping<TKey, TElement> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -509,9 +509,9 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class InterfaceLookupFormatter<TKey, TElement> : IJsonFormatter<ILookup<TKey, TElement>>
+    public sealed class InterfaceLookupFormatter<TKey, TElement> : JsonFormatterBase<ILookup<TKey, TElement>>
     {
-        public void Serialize(ref JsonWriter writer, ILookup<TKey, TElement> value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ILookup<TKey, TElement> value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -524,7 +524,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public ILookup<TKey, TElement> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ILookup<TKey, TElement> Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -624,10 +624,10 @@ namespace Utf8Json.Formatters
 
     // NonGenerics
 
-    public sealed class NonGenericListFormatter<T> : IJsonFormatter<T>
+    public sealed class NonGenericListFormatter<T> : JsonFormatterBase<T>
         where T : class, IList, new()
     {
-        public void Serialize(ref JsonWriter writer, T value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, T value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -650,7 +650,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndArray();
         }
 
-        public T Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override T Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -668,11 +668,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class NonGenericInterfaceEnumerableFormatter : IJsonFormatter<IEnumerable>
+    public sealed class NonGenericInterfaceEnumerableFormatter : JsonFormatterBase<IEnumerable>
     {
         public static readonly IJsonFormatter<IEnumerable> Default = new NonGenericInterfaceEnumerableFormatter();
 
-        public void Serialize(ref JsonWriter writer, IEnumerable value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, IEnumerable value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -694,7 +694,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndArray();
         }
 
-        public IEnumerable Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override IEnumerable Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -712,11 +712,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class NonGenericInterfaceCollectionFormatter : IJsonFormatter<ICollection>
+    public sealed class NonGenericInterfaceCollectionFormatter : JsonFormatterBase<ICollection>
     {
         public static readonly IJsonFormatter<ICollection> Default = new NonGenericInterfaceCollectionFormatter();
 
-        public void Serialize(ref JsonWriter writer, ICollection value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, ICollection value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -748,7 +748,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndArray();
         }
 
-        public ICollection Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override ICollection Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -766,11 +766,11 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class NonGenericInterfaceListFormatter : IJsonFormatter<IList>
+    public sealed class NonGenericInterfaceListFormatter : JsonFormatterBase<IList>
     {
         public static readonly IJsonFormatter<IList> Default = new NonGenericInterfaceListFormatter();
 
-        public void Serialize(ref JsonWriter writer, IList value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, IList value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -793,7 +793,7 @@ namespace Utf8Json.Formatters
             writer.WriteEndArray();
         }
 
-        public IList Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override IList Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 

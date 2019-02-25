@@ -2,14 +2,14 @@
 
 namespace Utf8Json.Formatters
 {
-    public sealed class IgnoreFormatter<T> : IJsonFormatter<T>
+    public sealed class IgnoreFormatter<T> : JsonFormatterBase<T>
     {
-        public void Serialize(ref JsonWriter writer, T value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, T value, IJsonFormatterResolver formatterResolver)
         {
             writer.WriteNull();
         }
 
-        public T Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override T Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             reader.ReadNextBlock();
             return default(T);

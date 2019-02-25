@@ -4,9 +4,9 @@ namespace Utf8Json.Formatters
 {
     // multi dimentional array serialize to [[seq], [seq]]
 
-    public sealed class TwoDimentionalArrayFormatter<T> : IJsonFormatter<T[,]>
+    public sealed class TwoDimentionalArrayFormatter<T> : JsonFormatterBase<T[,]>
     {
-        public void Serialize(ref JsonWriter writer, T[,] value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, T[,] value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -35,7 +35,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public T[,] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override T[,] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -72,9 +72,9 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class ThreeDimentionalArrayFormatter<T> : IJsonFormatter<T[,,]>
+    public sealed class ThreeDimentionalArrayFormatter<T> : JsonFormatterBase<T[,,]>
     {
-        public void Serialize(ref JsonWriter writer, T[,,] value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, T[,,] value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -110,7 +110,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public T[,,] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override T[,,] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 
@@ -160,9 +160,9 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class FourDimentionalArrayFormatter<T> : IJsonFormatter<T[,,,]>
+    public sealed class FourDimentionalArrayFormatter<T> : JsonFormatterBase<T[,,,]>
     {
-        public void Serialize(ref JsonWriter writer, T[,,,] value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, T[,,,] value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -205,7 +205,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public T[,,,] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override T[,,,] Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull()) return null;
 

@@ -3,10 +3,10 @@ using System;
 
 namespace Utf8Json.Formatters
 {
-    public sealed class NullableFormatter<T> : IJsonFormatter<T?>
+    public sealed class NullableFormatter<T> : JsonFormatterBase<T?>
         where T : struct
     {
-        public void Serialize(ref JsonWriter writer, T? value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, T? value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -18,7 +18,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public T? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override T? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {
@@ -31,7 +31,7 @@ namespace Utf8Json.Formatters
         }
     }
 
-    public sealed class StaticNullableFormatter<T> : IJsonFormatter<T?>
+    public sealed class StaticNullableFormatter<T> : JsonFormatterBase<T?>
         where T : struct
     {
         readonly IJsonFormatter<T> underlyingFormatter;
@@ -53,7 +53,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public void Serialize(ref JsonWriter writer, T? value, IJsonFormatterResolver formatterResolver)
+        public override void Serialize(ref JsonWriter writer, T? value, IJsonFormatterResolver formatterResolver)
         {
             if (value == null)
             {
@@ -65,7 +65,7 @@ namespace Utf8Json.Formatters
             }
         }
 
-        public T? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
+        public override T? Deserialize(ref JsonReader reader, IJsonFormatterResolver formatterResolver)
         {
             if (reader.ReadIsNull())
             {

@@ -43,7 +43,7 @@ namespace Utf8Json.CodeGenerator.Generator
             
             #line default
             #line hidden
-            this.Write(" : global::Utf8Json.IJsonFormatterResolver\r\n    {\r\n        public static readonly" +
+            this.Write(" : global::Utf8Json.JsonFormatterResolverBase\r\n    {\r\n        public static readonly" +
                     " global::Utf8Json.IJsonFormatterResolver Instance = new ");
             
             #line 18 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\ResolverTemplate.tt"
@@ -51,39 +51,29 @@ namespace Utf8Json.CodeGenerator.Generator
             
             #line default
             #line hidden
-            this.Write("();\r\n\r\n        ");
+            this.Write("();\r\n\r\n        private ");
             
             #line 20 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\ResolverTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(ResolverName));
+
+#line default
+#line hidden
+            this.Write($@"()
+        {{
+
+        }}
+
+        protected override IJsonFormatter FindFormatter(Type t)
+        {{
+            return {this.ToStringHelper.ToStringWithCulture(ResolverName)}GetFormatterHelper.GetFormatter(t);
+        }}
+    }}
+
+    ");
             
             #line default
             #line hidden
-            this.Write(@"()
-        {
-
-        }
-
-        public global::Utf8Json.IJsonFormatter<T> GetFormatter<T>()
-        {
-            return FormatterCache<T>.formatter;
-        }
-
-        static class FormatterCache<T>
-        {
-            public static readonly global::Utf8Json.IJsonFormatter<T> formatter;
-
-            static FormatterCache()
-            {
-                var f = ");
-            
-            #line 36 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\ResolverTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(ResolverName));
-            
-            #line default
-            #line hidden
-            this.Write("GetFormatterHelper.GetFormatter(typeof(T));\r\n                if (f != null)\r\n    " +
-                    "            {\r\n                    formatter = (global::Utf8Json.IJsonFormatter<" +
-                    "T>)f;\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    internal static" +
+            this.Write("internal static" +
                     " class ");
             
             #line 45 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\ResolverTemplate.tt"
@@ -135,7 +125,7 @@ namespace Utf8Json.CodeGenerator.Generator
             
             #line default
             #line hidden
-            this.Write("            };\r\n        }\r\n\r\n        internal static object GetFormatter(Type t)\r" +
+            this.Write("            };\r\n        }\r\n\r\n        internal static IJsonFormatter GetFormatter(Type t)\r" +
                     "\n        {\r\n            int key;\r\n            if (!lookup.TryGetValue(t, out key" +
                     ")) return null;\r\n\r\n            switch (key)\r\n            {\r\n");
             

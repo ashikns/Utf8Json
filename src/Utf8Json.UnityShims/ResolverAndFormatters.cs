@@ -7,32 +7,18 @@ namespace Utf8Json.Unity
 {
     using System;
 
-    public class UnityResolver : global::Utf8Json.IJsonFormatterResolver
+    public class UnityResolver : global::Utf8Json.JsonFormatterResolverBase
     {
         public static readonly global::Utf8Json.IJsonFormatterResolver Instance = new UnityResolver();
 
-        UnityResolver()
+        private UnityResolver()
         {
 
         }
 
-        public global::Utf8Json.IJsonFormatter<T> GetFormatter<T>()
+        protected override IJsonFormatter FindFormatter(Type t)
         {
-            return FormatterCache<T>.formatter;
-        }
-
-        static class FormatterCache<T>
-        {
-            public static readonly global::Utf8Json.IJsonFormatter<T> formatter;
-
-            static FormatterCache()
-            {
-                var f = UnityResolverGetFormatterHelper.GetFormatter(typeof(T));
-                if (f != null)
-                {
-                    formatter = (global::Utf8Json.IJsonFormatter<T>)f;
-                }
-            }
+            return UnityResolverGetFormatterHelper.GetFormatter(t);
         }
     }
 
@@ -68,7 +54,7 @@ namespace Utf8Json.Unity
             };
         }
 
-        internal static object GetFormatter(Type t)
+        internal static IJsonFormatter GetFormatter(Type t)
         {
             int key;
             if (!lookup.TryGetValue(t, out key)) return null;

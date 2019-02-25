@@ -14,28 +14,18 @@ using System.Threading.Tasks;
 
 namespace Utf8Json.Resolvers
 {
-    public sealed class DynamicGenericResolver : IJsonFormatterResolver
+    public sealed class DynamicGenericResolver : JsonFormatterResolverBase
     {
         public static readonly IJsonFormatterResolver Instance = new DynamicGenericResolver();
 
-        DynamicGenericResolver()
+        private DynamicGenericResolver()
         {
 
         }
 
-        public IJsonFormatter<T> GetFormatter<T>()
+        protected override IJsonFormatter FindFormatter(Type t)
         {
-            return FormatterCache<T>.formatter;
-        }
-
-        static class FormatterCache<T>
-        {
-            public static readonly IJsonFormatter<T> formatter;
-
-            static FormatterCache()
-            {
-                formatter = (IJsonFormatter<T>)DynamicGenericResolverGetFormatterHelper.GetFormatter(typeof(T));
-            }
+            return (IJsonFormatter)DynamicGenericResolverGetFormatterHelper.GetFormatter(t);
         }
     }
 }
@@ -44,7 +34,7 @@ namespace Utf8Json.Resolvers.Internal
 {
     internal static class DynamicGenericResolverGetFormatterHelper
     {
-        static readonly Dictionary<Type, Type> formatterMap = new Dictionary<Type, Type>()
+        private static readonly Dictionary<Type, Type> formatterMap = new Dictionary<Type, Type>()
         {
             {typeof(List<>), typeof(ListFormatter<>)},
             {typeof(LinkedList<>), typeof(LinkedListFormatter<>)},
@@ -300,7 +290,7 @@ namespace Utf8Json.Resolvers.Internal
             return null;
         }
 
-        static object CreateInstance(Type genericType, Type[] genericTypeArguments, params object[] arguments)
+        private static object CreateInstance(Type genericType, Type[] genericTypeArguments, params object[] arguments)
         {
             return Activator.CreateInstance(genericType.MakeGenericType(genericTypeArguments), arguments);
         }

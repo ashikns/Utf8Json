@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Reflection;
 
 namespace Utf8Json
@@ -6,6 +7,7 @@ namespace Utf8Json
     public interface IJsonFormatterResolver
     {
         IJsonFormatter<T> GetFormatter<T>();
+        IJsonFormatter GetFormatter(Type t);
     }
 
     public static class JsonFormatterResolverExtensions
@@ -50,5 +52,33 @@ namespace Utf8Json
         public FormatterNotRegisteredException(string message) : base(message)
         {
         }
+    }
+
+    public abstract class JsonFormatterResolverBase : IJsonFormatterResolver
+    {
+        protected ConcurrentDictionary<Type, IJsonFormatter> FormatterCache { get; private set; }
+
+        protected JsonFormatterResolverBase()
+        {
+            FormatterCache = new ConcurrentDictionary<Type, IJsonFormatter>();
+        }
+
+        public IJsonFormatter<T> GetFormatter<T>()
+        {
+            return (IJsonFormatter<T>)GetFormatter(typeof(T));
+        }
+
+        public IJsonFormatter GetFormatter(Type t)
+        {
+            if (!FormatterCache.TryGetValue(t, out var formatter))
+            {
+                formatter = FindFormatter(t);
+                FormatterCache.TryAdd(t, formatter);
+            }
+
+            return formatter;
+        }
+
+        protected abstract IJsonFormatter FindFormatter(Type t);
     }
 }

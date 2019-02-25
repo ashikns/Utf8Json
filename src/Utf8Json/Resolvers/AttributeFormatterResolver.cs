@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Reflection;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using Utf8Json.Internal;
 
 namespace Utf8Json.Resolvers
@@ -10,52 +8,42 @@ namespace Utf8Json.Resolvers
     /// <summary>
     /// Get formatter from [JsonFormatter] attribute.
     /// </summary>
-    public sealed class AttributeFormatterResolver : IJsonFormatterResolver
+    public sealed class AttributeFormatterResolver : JsonFormatterResolverBase
     {
         public static IJsonFormatterResolver Instance = new AttributeFormatterResolver();
 
-        AttributeFormatterResolver()
+        private AttributeFormatterResolver()
         {
 
         }
 
-        public IJsonFormatter<T> GetFormatter<T>()
+        protected override IJsonFormatter FindFormatter(Type t)
         {
-            return FormatterCache<T>.formatter;
-        }
-
-        static class FormatterCache<T>
-        {
-            public static readonly IJsonFormatter<T> formatter;
-
-            static FormatterCache()
-            {
 #if (UNITY_METRO || UNITY_WSA) && !NETFX_CORE
-                var attr = (JsonFormatterAttribute)typeof(T).GetCustomAttributes(typeof(JsonFormatterAttribute), true).FirstOrDefault();
+            var attr = (JsonFormatterAttribute)t.GetCustomAttributes(typeof(JsonFormatterAttribute), true).FirstOrDefault();
 #else
-                var attr = typeof(T).GetTypeInfo().GetCustomAttribute<JsonFormatterAttribute>();
+            var attr = t.GetTypeInfo().GetCustomAttribute<JsonFormatterAttribute>();
 #endif
-                if (attr == null)
-                {
-                    return;
-                }
+            if (attr == null)
+            {
+                return null;
+            }
 
-                try
+            try
+            {
+                if (attr.FormatterType.IsGenericType && !attr.FormatterType.GetTypeInfo().IsConstructedGenericType())
                 {
-                    if (attr.FormatterType.IsGenericType && !attr.FormatterType.GetTypeInfo().IsConstructedGenericType())
-                    {
-                        var t = attr.FormatterType.MakeGenericType(typeof(T)); // use T self
-                        formatter = (IJsonFormatter<T>)Activator.CreateInstance(t, attr.Arguments);
-                    }
-                    else
-                    {
-                        formatter = (IJsonFormatter<T>)Activator.CreateInstance(attr.FormatterType, attr.Arguments);
-                    }
+                    var tGeneric = attr.FormatterType.MakeGenericType(t); // use T self
+                    return (IJsonFormatter)Activator.CreateInstance(tGeneric, attr.Arguments);
                 }
-                catch (Exception ex)
+                else
                 {
-                    throw new InvalidOperationException("Can not create formatter from JsonFormatterAttribute, check the target formatter is public and has constructor with right argument. FormatterType:" + attr.FormatterType.Name, ex);
+                    return (IJsonFormatter)Activator.CreateInstance(attr.FormatterType, attr.Arguments);
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Can not create formatter from JsonFormatterAttribute, check the target formatter is public and has constructor with right argument. FormatterType:" + attr.FormatterType.Name, ex);
             }
         }
     }

@@ -1,41 +1,29 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using Utf8Json.Formatters;
 
 namespace Utf8Json.Resolvers
 {
-    public sealed class BuiltinResolver : IJsonFormatterResolver
+    public sealed class BuiltinResolver : JsonFormatterResolverBase
     {
         public static readonly IJsonFormatterResolver Instance = new BuiltinResolver();
 
-        BuiltinResolver()
+        private BuiltinResolver()
         {
 
         }
 
-        public IJsonFormatter<T> GetFormatter<T>()
+        protected override IJsonFormatter FindFormatter(Type t)
         {
-            return FormatterCache<T>.formatter;
-        }
-
-        static class FormatterCache<T>
-        {
-            public static readonly IJsonFormatter<T> formatter;
-
-            static FormatterCache()
-            {
-                // Reduce IL2CPP code generate size(don't write long code in <T>)
-                formatter = (IJsonFormatter<T>)BuiltinResolverGetFormatterHelper.GetFormatter(typeof(T));
-            }
+            return (IJsonFormatter)BuiltinResolverGetFormatterHelper.GetFormatter(t);
         }
 
         // used from PrimitiveObjectFormatter
         internal static class BuiltinResolverGetFormatterHelper
         {
-            static readonly Dictionary<Type, object> formatterMap = new Dictionary<Type, object>()
+            private static readonly Dictionary<Type, IJsonFormatter> formatterMap = new Dictionary<Type, IJsonFormatter>()
             {
                 // Primitive
                 {typeof(Int16), Int16Formatter.Default},
@@ -135,13 +123,8 @@ namespace Utf8Json.Resolvers
 
             internal static object GetFormatter(Type t)
             {
-                object formatter;
-                if (formatterMap.TryGetValue(t, out formatter))
-                {
-                    return formatter;
-                }
-
-                return null;
+                formatterMap.TryGetValue(t, out var formatter);
+                return formatter;
             }
         }
     }

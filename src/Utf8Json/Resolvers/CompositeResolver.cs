@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
 namespace Utf8Json.Resolvers
 {
-    public sealed class CompositeResolver : IJsonFormatterResolver
+    public sealed class CompositeResolver : JsonFormatterResolverBase
     {
         public static readonly CompositeResolver Instance = new CompositeResolver();
 
@@ -12,7 +13,7 @@ namespace Utf8Json.Resolvers
         static IJsonFormatter[] formatters = new IJsonFormatter[0];
         static IJsonFormatterResolver[] resolvers = new IJsonFormatterResolver[0];
 
-        CompositeResolver()
+        private CompositeResolver()
         {
         }
 
@@ -83,42 +84,23 @@ namespace Utf8Json.Resolvers
         }
 #endif
 
-        public IJsonFormatter<T> GetFormatter<T>()
+        protected override IJsonFormatter FindFormatter(Type t)
         {
-            return FormatterCache<T>.formatter;
-        }
+            isFreezed = true;
 
-        static class FormatterCache<T>
-        {
-            public static readonly IJsonFormatter<T> formatter;
-
-            static FormatterCache()
+            foreach (var item in formatters)
             {
-                isFreezed = true;
-
-                foreach (var item in formatters)
+                foreach (var implInterface in item.GetType().GetTypeInfo().ImplementedInterfaces)
                 {
-                    foreach (var implInterface in item.GetType().GetTypeInfo().ImplementedInterfaces)
+                    var ti = implInterface.GetTypeInfo();
+                    if (ti.IsGenericType && ti.GenericTypeArguments[0] == t)
                     {
-                        var ti = implInterface.GetTypeInfo();
-                        if (ti.IsGenericType && ti.GenericTypeArguments[0] == typeof(T))
-                        {
-                            formatter = (IJsonFormatter<T>)item;
-                            return;
-                        }
-                    }
-                }
-
-                foreach (var item in resolvers)
-                {
-                    var f = item.GetFormatter<T>();
-                    if (f != null)
-                    {
-                        formatter = f;
-                        return;
+                        return item;
                     }
                 }
             }
+
+            return resolvers.Select(item => item.GetFormatter(t)).FirstOrDefault(f => f != null);
         }
     }
 

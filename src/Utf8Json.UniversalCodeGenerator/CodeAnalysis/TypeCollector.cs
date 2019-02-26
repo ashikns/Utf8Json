@@ -274,6 +274,7 @@ namespace Utf8Json.UniversalCodeGenerator
 
             if (typeSymbol.TypeKind == TypeKind.Enum)
             {
+                CollectEnum(type);
                 return;
             }
 
@@ -628,6 +629,18 @@ namespace Utf8Json.UniversalCodeGenerator
                 FullName = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                 Namespace = type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString(),
                 HasConstructor = ctor != null
+            };
+            collectedObjectInfo.Add(info);
+        }
+
+        void CollectEnum(INamedTypeSymbol type)
+        {
+            var info = new ObjectSerializationInfo
+            {
+                IsEnum = true,
+                Name = type.ToDisplayString(shortTypeNameFormat).Replace(".", "_"),
+                FullName = type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                Namespace = type.ContainingNamespace.IsGlobalNamespace ? null : type.ContainingNamespace.ToDisplayString(),
             };
             collectedObjectInfo.Add(info);
         }

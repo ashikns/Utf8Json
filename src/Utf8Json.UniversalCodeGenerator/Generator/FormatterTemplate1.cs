@@ -41,6 +41,19 @@ namespace Utf8Json.CodeGenerator.Generator
             #line 17 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\FormatterTemplate.tt"
  foreach(var objInfo in objectSerializationInfos) { 
             
+if (objInfo.IsEnum) {
+    this.Write($@"
+
+    public sealed class {this.ToStringHelper.ToStringWithCulture(objInfo.Name)}Formatter : global::Utf8Json.Formatters.EnumFormatter<{this.ToStringHelper.ToStringWithCulture(objInfo.FullName)}>
+    {{
+        public {this.ToStringHelper.ToStringWithCulture(objInfo.Name)}Formatter() : base(true)
+        {{
+        }}
+    }}
+
+");
+                } else {
+
             #line default
             #line hidden
             this.Write("\r\n    public sealed class ");
@@ -418,7 +431,8 @@ var memberName = this.ToStringHelper.ToStringWithCulture(extensionDataMember.Mem
             this.Write("        }\r\n    }\r\n\r\n");
             
             #line 121 "C:\Users\y.kawai\Documents\neuecc\Utf8Json\src\Utf8Json.CodeGenerator\Generator\FormatterTemplate.tt"
- } 
+ }
+ }               
             
             #line default
             #line hidden

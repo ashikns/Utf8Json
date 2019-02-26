@@ -19,6 +19,7 @@ namespace Utf8Json.UniversalCodeGenerator
         public string Namespace { get; set; }
         public bool IsClass { get; set; }
         public bool IsStruct { get { return !IsClass; } }
+        public bool IsEnum { get; set; }
         public MemberSerializationInfo[] ConstructorParameters { get; set; }
         public MemberSerializationInfo[] Members { get; set; }
         public string FormatterName => (Namespace == null ? Name : Namespace + "." + Name) + "Formatter";

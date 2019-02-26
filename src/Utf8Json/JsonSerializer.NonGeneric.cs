@@ -490,4 +490,104 @@ namespace Utf8Json
         }
     }
 }
+#else
+using System;
+using System.Collections.Concurrent;
+using System.IO;
+
+namespace Utf8Json
+{
+    // NonGeneric API
+    public static partial class JsonSerializer
+    {
+        public static class NonGeneric
+        {
+            private static readonly ConcurrentDictionary<Type, IJsonFormatter> _formatterCache;
+
+            static NonGeneric()
+            {
+                _formatterCache = new ConcurrentDictionary<Type, IJsonFormatter>();
+            }
+
+            public static byte[] Serialize(object value)
+            {
+                var writer = new JsonWriter(MemoryPool.GetBuffer());
+                Serialize(ref writer, value);
+                return writer.ToUtf8ByteArray();
+            }
+
+            public static void Serialize(Stream stream, object value)
+            {
+                var writer = new JsonWriter(MemoryPool.GetBuffer());
+                Serialize(ref writer, value);
+                var buffer = writer.GetBuffer();
+                stream.Write(buffer.Array, buffer.Offset, buffer.Count);
+            }
+
+            public static void Serialize(ref JsonWriter writer, object value)
+            {
+                if (value == null)
+                {
+                    writer.WriteNull();
+                    return;
+                }
+
+                GetFormatter(value.GetType()).SerializeNonGeneric(ref writer, value, defaultResolver);
+            }
+
+            public static object Deserialize(Type type, byte[] bytes)
+            {
+                var reader = new JsonReader(bytes);
+                return GetFormatter(type).DeserializeNonGeneric(ref reader, type, defaultResolver);
+            }
+
+            public static object Deserialize(Type type, byte[] bytes, int offset, int count)
+            {
+                var reader = new JsonReader(bytes, offset);
+                // when token is number, can not use from pool(can not find end line).
+                if (reader.GetCurrentJsonToken() == JsonToken.Number && offset > 0 && count + offset < bytes.Length)
+                {
+                    var buf = new byte[count];
+                    Buffer.BlockCopy(bytes, offset, buf, 0, count);
+                    reader = new JsonReader(buf);
+                }
+                return GetFormatter(type).DeserializeNonGeneric(ref reader, type, defaultResolver);
+            }
+
+            public static object Deserialize(Type type, Stream stream)
+            {
+                if (!(stream is MemoryStream ms))
+                {
+                    throw new Exception($"{nameof(stream)} should be a {typeof(MemoryStream)}");
+                }
+                if (!ms.TryGetBuffer(out var buf))
+                {
+                    throw new Exception($"Could not get buffer from {nameof(stream)}");
+                }
+                return Deserialize(type, buf.Array, buf.Offset, buf.Count);
+            }
+
+            public static object Deserialize(Type type, ArraySegment<byte> bytes)
+            {
+                return Deserialize(type, bytes.Array, bytes.Offset, bytes.Count);
+            }
+
+            public static object Deserialize(Type type, ref JsonReader reader)
+            {
+                return GetFormatter(type).DeserializeNonGeneric(ref reader, type, defaultResolver);
+            }
+
+            private static IJsonFormatter GetFormatter(Type t)
+            {
+                if (!_formatterCache.TryGetValue(t, out var formatter))
+                {
+                    formatter = defaultResolver.GetFormatter(t);
+                    _formatterCache.TryAdd(t, formatter);
+                }
+
+                return formatter;
+            }
+        }
+    }
+}
 #endif
